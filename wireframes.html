@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blinkit Replica — Wireframes</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f0f0f0; color: #333; }
+
+  /* ── NAV ── */
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #1c1c1c; padding: 12px 24px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .top-nav h1 { color: #f8c200; font-size: 18px; font-weight: 800; margin-right: 16px; }
+  .tab-btn {
+    padding: 7px 18px; border-radius: 20px; border: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; transition: all .2s;
+    background: transparent; color: #aaa;
+  }
+  .tab-btn.active { background: #f8c200; color: #1c1c1c; }
+  .tab-btn:hover:not(.active) { background: #333; color: #fff; }
+
+  /* ── PANELS ── */
+  .panel { display: none; padding: 32px 24px; }
+  .panel.active { display: block; }
+
+  .panel-title {
+    font-size: 22px; font-weight: 800; color: #1c1c1c;
+    margin-bottom: 8px;
+  }
+  .panel-sub { font-size: 14px; color: #777; margin-bottom: 28px; }
+
+  /* ── SCREEN GRID ── */
+  .screen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+  }
+  .screen-group { margin-bottom: 48px; }
+  .screen-group h2 {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #999; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 2px solid #e0e0e0;
+  }
+
+  .screen-card {
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    overflow: hidden; transition: transform .2s, box-shadow .2s;
+  }
+  .screen-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0,0,0,.14);
+  }
+  .screen-label {
+    padding: 10px 14px; font-size: 12px; font-weight: 700;
+    background: #f7f7f7; border-top: 1px solid #eee;
+    color: #555; display: flex; align-items: center; justify-content: space-between;
+  }
+  .screen-label .badge {
+    font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+  }
+
+  /* ── WIREFRAME ELEMENTS ── */
+  .wf { background: #fff; }
+
+  /* Status bar */
+  .status-bar {
+    background: #1c1c1c; height: 22px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px;
+  }
+  .status-bar span { color: #fff; font-size: 9px; font-weight: 600; }
+
+  /* Generic placeholder box */
+  .ph {
+    background: #ebebeb; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: #aaa; font-size: 9px; font-weight: 600; text-align: center;
+  }
+  .ph.dark { background: #d5d5d5; color: #888; }
+  .ph.green { background: #c8ecd1; color: #2e7d32; }
+  .ph.yellow { background: #fef3c7; color: #92400e; }
+  .ph.blue { background: #dbeafe; color: #1e40af; }
+  .ph.red { background: #fee2e2; color: #991b1b; }
+  .ph.img { font-size: 20px; background: #f0f0f0; }
+
+  /* ─── USER PANEL SCREENS ─── */
+
+  /* HOME */
+  .u-home { padding: 0; }
+  .u-header {
+    background: #fff; padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .u-logo {
+    width: 28px; height: 28px; background: #0c831f; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 12px; font-weight: 900; flex-shrink: 0;
+  }
+  .u-loc { flex: 1; }
+  .u-loc .label { font-size: 9px; color: #999; }
+  .u-loc .val { font-size: 11px; font-weight: 700; color: #1c1c1c; }
+  .u-cart-btn {
+    background: #0c831f; color: #fff; border-radius: 8px;
+    padding: 5px 10px; font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .u-search {
+    margin: 8px 12px; background: #f5f5f5; border-radius: 8px;
+    padding: 8px 10px; font-size: 10px; color: #aaa; border: 1.5px solid #e0e0e0;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .u-banner { margin: 8px 12px; height: 80px; border-radius: 10px; background: linear-gradient(135deg, #0c831f, #1daa35); display: flex; align-items: center; padding: 0 16px; }
+  .u-banner .b-text { color: #fff; }
+  .u-banner .b-title { font-size: 13px; font-weight: 800; }
+  .u-banner .b-sub { font-size: 9px; opacity: .8; margin-top: 2px; }
+  .u-banner .b-badge { margin-left: auto; background: #f8c200; color: #1c1c1c; font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+  .cats-row { display: flex; gap: 8px; padding: 0 12px 8px; overflow: hidden; }
+  .cat-item { flex-shrink: 0; text-align: center; }
+  .cat-icon { width: 44px; height: 44px; border-radius: 12px; background: #f0f9f2; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 3px; }
+  .cat-name { font-size: 8px; color: #555; font-weight: 600; }
+  .section-hdr { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px 6px; }
+  .section-hdr .sh-title { font-size: 12px; font-weight: 800; color: #1c1c1c; }
+  .section-hdr .sh-see { font-size: 9px; color: #0c831f; font-weight: 600; }
+  .prods-row { display: flex; gap: 8px; padding: 0 12px 12px; overflow: hidden; }
+
+  .prod-card {
+    width: 84px; flex-shrink: 0; border: 1px solid #eee; border-radius: 10px; overflow: hidden;
+  }
+  .prod-img { height: 56px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .prod-body { padding: 5px 6px; }
+  .prod-name { font-size: 8px; font-weight: 700; color: #1c1c1c; line-height: 1.2; }
+  .prod-unit { font-size: 7px; color: #999; }
+  .prod-price-row { display: flex; align-items: center; gap: 3px; margin-top: 3px; }
+  .prod-price { font-size: 9px; font-weight: 800; }
+  .prod-old { font-size: 7px; color: #bbb; text-decoration: line-through; }
+  .prod-add { width: 100%; margin-top: 4px; background: #0c831f; color: #fff; border: none; border-radius: 6px; font-size: 8px; font-weight: 700; padding: 4px 0; cursor: pointer; }
+  .prod-eta { font-size: 7px; color: #0c831f; font-weight: 600; }
+
+  /* CART */
+  .cart-item-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #f5f5f5; }
+  .qty-ctrl { display: flex; align-items: center; gap: 4px; background: #0c831f; border-radius: 6px; padding: 2px 4px; }
+  .qty-ctrl span { font-size: 8px; font-weight: 700; color: #fff; }
+  .qty-ctrl .sep { width: 16px; height: 12px; background: #fff; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
+  .qty-ctrl .sep span { color: #0c831f; font-size: 9px; font-weight: 800; }
+  .bill-row { display: flex; justify-content: space-between; padding: 4px 12px; font-size: 9px; }
+  .bill-row.total { font-weight: 800; font-size: 10px; border-top: 1px solid #eee; padding-top: 8px; margin-top: 4px; }
+  .checkout-btn { margin: 8px 12px; background: #0c831f; color: #fff; border-radius: 10px; padding: 10px; text-align: center; font-size: 11px; font-weight: 700; }
+
+  /* ORDER TRACKING */
+  .tracking-steps { padding: 12px; }
+  .t-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+  .t-dot-col { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .t-dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; flex-shrink: 0; }
+  .t-dot.done { background: #0c831f; color: #fff; }
+  .t-dot.active { background: #0c831f; color: #fff; box-shadow: 0 0 0 4px #c8ecd1; }
+  .t-dot.todo { background: #e0e0e0; color: #aaa; }
+  .t-line { width: 2px; height: 18px; background: #e0e0e0; }
+  .t-line.done { background: #0c831f; }
+  .t-info { padding-top: 2px; }
+  .t-label { font-size: 10px; font-weight: 700; }
+  .t-label.done { color: #1c1c1c; }
+  .t-label.todo { color: #bbb; }
+  .t-time { font-size: 8px; color: #999; }
+  .driver-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #f0f9f2; margin: 8px 12px; border-radius: 10px; }
+  .driver-av { width: 32px; height: 32px; background: #c8ecd1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #0c831f; }
+  .driver-info { flex: 1; }
+  .driver-name { font-size: 10px; font-weight: 700; }
+  .driver-veh { font-size: 8px; color: #777; }
+  .call-btn { width: 28px; height: 28px; background: #0c831f; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+
+  /* ─── ADMIN PANEL ─── */
+  .admin-layout { display: flex; height: 100%; min-height: 420px; }
+  .admin-sidebar {
+    width: 56px; background: #1a1a2e; display: flex; flex-direction: column;
+    align-items: center; padding: 10px 0; gap: 2px;
+  }
+  .admin-sidebar.wide { width: 130px; align-items: flex-start; padding: 10px 8px; }
+  .sb-logo { width: 32px; height: 32px; background: #f8c200; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #1c1c1c; margin-bottom: 8px; }
+  .sb-item { display: flex; align-items: center; gap: 7px; padding: 7px 8px; border-radius: 8px; width: 100%; cursor: pointer; }
+  .sb-item.active { background: rgba(248,194,0,.15); }
+  .sb-icon { font-size: 14px; flex-shrink: 0; }
+  .sb-label { font-size: 10px; color: #aaa; font-weight: 600; }
+  .sb-item.active .sb-label { color: #f8c200; }
+  .admin-main { flex: 1; background: #f8f9fa; overflow: hidden; }
+  .admin-topbar { background: #fff; padding: 8px 14px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+  .admin-topbar .pg-title { font-size: 13px; font-weight: 800; color: #1c1c1c; }
+  .admin-topbar .ta-right { display: flex; gap: 6px; align-items: center; }
+  .notif-btn { width: 28px; height: 28px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; position: relative; }
+  .notif-dot { width: 7px; height: 7px; background: red; border-radius: 50%; position: absolute; top: 4px; right: 4px; border: 1px solid #fff; }
+  .av-chip { display: flex; align-items: center; gap: 5px; background: #f5f5f5; padding: 4px 8px; border-radius: 20px; }
+  .av-dot { width: 22px; height: 22px; background: #0c831f; border-radius: 50%; color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .av-name { font-size: 9px; font-weight: 600; color: #555; }
+  .admin-body { padding: 12px; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .stat-card { background: #fff; border-radius: 8px; padding: 8px 10px; }
+  .stat-icon { font-size: 14px; margin-bottom: 4px; }
+  .stat-val { font-size: 14px; font-weight: 800; color: #1c1c1c; }
+  .stat-lbl { font-size: 8px; color: #999; margin-top: 1px; }
+  .stat-trend { font-size: 8px; color: #0c831f; font-weight: 600; }
+
+  .chart-box { background: #fff; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+  .chart-title { font-size: 10px; font-weight: 700; margin-bottom: 8px; color: #333; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
+  .bar { flex: 1; border-radius: 3px 3px 0 0; background: #c8ecd1; min-width: 6px; }
+  .bar.highlight { background: #0c831f; }
+  .bar-labels { display: flex; gap: 4px; margin-top: 3px; }
+  .bar-lbl { flex: 1; text-align: center; font-size: 7px; color: #bbb; }
+
+  .mini-table { background: #fff; border-radius: 8px; overflow: hidden; }
+  .mini-table-hdr { display: flex; background: #f5f5f5; padding: 5px 8px; }
+  .mini-table-hdr span { font-size: 8px; font-weight: 700; color: #999; text-transform: uppercase; flex: 1; }
+  .mini-table-row { display: flex; padding: 5px 8px; border-bottom: 1px solid #f5f5f5; align-items: center; }
+  .mini-table-row span { font-size: 9px; color: #555; flex: 1; }
+  .mini-table-row span.bold { font-weight: 700; color: #1c1c1c; }
+  .status-pill { font-size: 8px; padding: 2px 6px; border-radius: 8px; font-weight: 600; }
+  .s-green { background: #c8ecd1; color: #2e7d32; }
+  .s-yellow { background: #fef3c7; color: #92400e; }
+  .s-blue { background: #dbeafe; color: #1e40af; }
+  .s-red { background: #fee2e2; color: #b91c1c; }
+  .s-purple { background: #ede9fe; color: #5b21b6; }
+  .s-gray { background: #f3f4f6; color: #6b7280; }
+
+  .users-filters { display: flex; gap: 6px; margin-bottom: 8px; }
+  .filter-pill { padding: 4px 10px; border-radius: 10px; font-size: 9px; font-weight: 600; background: #f0f0f0; color: #777; }
+  .filter-pill.active { background: #0c831f; color: #fff; }
+
+  /* ─── VENDOR PANEL ─── */
+  .vendor-layout { display: flex; min-height: 420px; }
+  .vendor-sidebar { width: 130px; background: #fff; border-right: 1px solid #eee; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; }
+  .vs-logo { display: flex; align-items: center; gap: 6px; padding: 6px 4px 12px; }
+  .vs-logo-icon { width: 28px; height: 28px; background: #0c831f; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 900; }
+  .vs-store-name { font-size: 10px; font-weight: 800; color: #1c1c1c; }
+  .vs-badge { font-size: 8px; background: #c8ecd1; color: #0c831f; padding: 1px 5px; border-radius: 6px; font-weight: 600; margin-top: 1px; }
+  .vs-item { display: flex; align-items: center; gap: 6px; padding: 6px 6px; border-radius: 7px; }
+  .vs-item.active { background: #f0f9f2; }
+  .vs-icon { font-size: 12px; }
+  .vs-label { font-size: 9px; font-weight: 600; color: #888; }
+  .vs-item.active .vs-label { color: #0c831f; }
+  .vs-badge-count { margin-left: auto; width: 16px; height: 16px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 8px; font-weight: 700; }
+  .vendor-main { flex: 1; background: #f8f9fa; }
+  .vendor-topbar { background: #fff; padding: 8px 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+  .online-toggle { display: flex; align-items: center; gap: 5px; }
+  .toggle-track { width: 32px; height: 18px; background: #0c831f; border-radius: 9px; position: relative; }
+  .toggle-thumb { width: 14px; height: 14px; background: #fff; border-radius: 50%; position: absolute; top: 2px; right: 2px; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .online-lbl { font-size: 10px; font-weight: 700; color: #0c831f; }
+  .vendor-body { padding: 12px; }
+  .order-card { background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; border-left: 3px solid #f8c200; }
+  .oc-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .oc-id { font-size: 10px; font-weight: 800; }
+  .oc-time { font-size: 8px; color: #999; }
+  .oc-customer { font-size: 9px; color: #555; margin-bottom: 4px; }
+  .oc-items { font-size: 8px; color: #888; margin-bottom: 6px; }
+  .oc-footer { display: flex; gap: 6px; align-items: center; }
+  .oc-total { font-size: 10px; font-weight: 800; flex: 1; }
+  .oc-btn { padding: 4px 10px; border-radius: 6px; font-size: 8px; font-weight: 700; border: none; cursor: pointer; }
+  .oc-btn.accept { background: #0c831f; color: #fff; }
+  .oc-btn.reject { background: #fee2e2; color: #b91c1c; }
+
+  /* INVENTORY */
+  .inv-row { display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-bottom: 1px solid #f5f5f5; }
+  .inv-name { font-size: 9px; font-weight: 600; flex: 1; }
+  .inv-stock { font-size: 9px; font-weight: 700; width: 28px; text-align: center; }
+  .inv-stock.low { color: #f59e0b; }
+  .inv-stock.out { color: #ef4444; }
+  .inv-stock.ok { color: #0c831f; }
+  .inv-bar { flex: 1; height: 5px; background: #f0f0f0; border-radius: 3px; }
+  .inv-bar-fill { height: 100%; border-radius: 3px; }
+
+  /* ─── DRIVER PANEL ─── */
+  .driver-screen { max-width: 240px; margin: 0 auto; }
+  .d-header {
+    background: #1a1a2e; padding: 8px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .d-name-row { display: flex; align-items: center; gap: 6px; }
+  .d-av { width: 28px; height: 28px; background: #0c831f; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .d-name { font-size: 10px; font-weight: 700; color: #fff; }
+  .d-online-btn { padding: 4px 10px; background: #22c55e; border-radius: 12px; font-size: 9px; font-weight: 700; color: #fff; }
+  .d-offline-btn { padding: 4px 10px; background: #555; border-radius: 12px; font-size: 9px; font-weight: 700; color: #fff; }
+  .d-today { text-align: right; }
+  .d-today .earn { font-size: 13px; font-weight: 800; color: #f8c200; }
+  .d-today .lbl { font-size: 8px; color: #999; }
+  .d-body { background: #f5f5f5; padding: 10px; }
+  .d-stat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 6px; margin-bottom: 10px; }
+  .d-stat { background: #fff; border-radius: 10px; padding: 8px 10px; }
+  .d-stat .val { font-size: 16px; font-weight: 800; color: #1c1c1c; }
+  .d-stat .lbl { font-size: 8px; color: #999; }
+  .d-delivery-card { background: #0c831f; border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; }
+  .d-delivery-card .dc-title { color: #fff; font-size: 10px; font-weight: 700; margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .d-delivery-card .dc-step { background: rgba(255,255,255,.15); border-radius: 7px; padding: 5px 8px; margin-bottom: 4px; }
+  .d-delivery-card .dc-step .step-lbl { color: #c8ecd1; font-size: 8px; }
+  .d-delivery-card .dc-step .step-val { color: #fff; font-size: 9px; font-weight: 700; }
+  .d-delivery-card .dc-earn { color: #f8c200; font-size: 11px; font-weight: 800; }
+  .avail-card { background: #fff; border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; }
+  .avail-hdr { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .avail-id { font-size: 9px; font-weight: 700; }
+  .avail-earn { font-size: 10px; font-weight: 800; color: #0c831f; }
+  .avail-route { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
+  .avail-point { display: flex; align-items: flex-start; gap: 5px; }
+  .avail-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 1px; flex-shrink: 0; }
+  .avail-addr { font-size: 8px; color: #666; line-height: 1.2; }
+  .avail-accept { width: 100%; background: #0c831f; color: #fff; border: none; border-radius: 7px; padding: 6px; font-size: 9px; font-weight: 700; cursor: pointer; }
+
+  /* OTP screen */
+  .otp-overlay { background: #fff; border-radius: 10px; margin: 8px; padding: 12px; }
+  .otp-title { font-size: 12px; font-weight: 800; margin-bottom: 4px; }
+  .otp-sub { font-size: 9px; color: #888; margin-bottom: 10px; }
+  .otp-boxes { display: flex; gap: 6px; justify-content: center; margin-bottom: 10px; }
+  .otp-box { width: 36px; height: 40px; border: 2px solid #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
+  .otp-box.filled { border-color: #0c831f; color: #0c831f; }
+  .otp-verify-btn { width: 100%; background: #0c831f; color: #fff; border: none; border-radius: 8px; padding: 10px; font-size: 11px; font-weight: 700; }
+
+  /* Driver bottom nav */
+  .d-bottom-nav { background: #fff; border-top: 1px solid #eee; display: flex; padding: 6px 0; }
+  .d-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .d-nav-icon { font-size: 16px; }
+  .d-nav-lbl { font-size: 8px; color: #bbb; font-weight: 600; }
+  .d-nav-item.active .d-nav-lbl { color: #0c831f; }
+
+  /* ─── UTILITIES ─── */
+  .spacer { height: 8px; }
+  .divider { height: 1px; background: #f0f0f0; margin: 0 12px; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .flex-1 { flex: 1; }
+  .text-xs { font-size: 9px; }
+  .text-sm { font-size: 10px; }
+  .font-bold { font-weight: 700; }
+  .text-gray { color: #aaa; }
+  .text-green { color: #0c831f; }
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .px-12 { padding: 0 12px; }
+  .mb-6 { margin-bottom: 6px; }
+  .green-btn { background: #0c831f; color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-size: 10px; font-weight: 700; width: 100%; text-align: center; }
+  .yellow-btn { background: #f8c200; color: #1c1c1c; border: none; border-radius: 8px; padding: 8px 14px; font-size: 10px; font-weight: 700; width: 100%; text-align: center; }
+
+  /* ─── LEGEND ─── */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #666; }
+  .legend-swatch { width: 16px; height: 16px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ══ TOP NAV ══ -->
+<nav class="top-nav">
+  <h1>⚡ Blinkit Wireframes</h1>
+  <button class="tab-btn active" onclick="showPanel('user')">🛒 User Panel</button>
+  <button class="tab-btn" onclick="showPanel('admin')">⚙️ Admin Panel</button>
+  <button class="tab-btn" onclick="showPanel('vendor')">🏪 Vendor Panel</button>
+  <button class="tab-btn" onclick="showPanel('driver')">🚴 Driver Panel</button>
+</nav>
+
+<!-- ══════════════════════════════════════
+     USER PANEL
+══════════════════════════════════════ -->
+<div id="panel-user" class="panel active">
+  <div class="panel-title">🛒 User Panel</div>
+  <div class="panel-sub">Customer-facing app — browse, cart, order tracking · Port 3000</div>
+
+  <!-- SCREEN 1: Home -->
+  <div class="screen-group">
+    <h2>Main Screens</h2>
+    <div class="screen-grid">
+
+      <!-- HOME -->
+      <div class="screen-card">
+        <div class="u-home">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <!-- Header -->
+          <div class="u-header">
+            <div class="u-logo">⚡</div>
+            <div class="u-loc">
+              <div class="label">Delivering to</div>
+              <div class="val">📍 Connaught Place, Delhi ▾</div>
+            </div>
+            <div class="u-cart-btn">🛒 2</div>
+          </div>
+          <!-- Search -->
+          <div class="u-search">🔍 Search for groceries…</div>
+          <!-- Banner -->
+          <div class="u-banner">
+            <div class="b-text">
+              <div class="b-title">Fresh Groceries</div>
+              <div class="b-sub">Delivered in 10 mins</div>
+            </div>
+            <div class="b-badge">⚡ 10 mins</div>
+          </div>
+          <!-- Categories -->
+          <div class="section-hdr"><span class="sh-title">Shop by Category</span><span class="sh-see">See all →</span></div>
+          <div class="cats-row">
+            <div class="cat-item"><div class="cat-icon">🥦</div><div class="cat-name">Fruits &amp; Vegs</div></div>
+            <div class="cat-item"><div class="cat-icon">🥛</div><div class="cat-name">Dairy</div></div>
+            <div class="cat-item"><div class="cat-icon">🍞</div><div class="cat-name">Bakery</div></div>
+            <div class="cat-item"><div class="cat-icon">🥤</div><div class="cat-name">Drinks</div></div>
+            <div class="cat-item"><div class="cat-icon">🍿</div><div class="cat-name">Snacks</div></div>
+          </div>
+          <!-- Products -->
+          <div class="section-hdr"><span class="sh-title">🔥 Top Deals</span><span class="sh-see">See all →</span></div>
+          <div class="prods-row">
+            <div class="prod-card">
+              <div class="prod-img">🍌</div>
+              <div class="prod-body">
+                <div class="prod-name">Bananas</div>
+                <div class="prod-unit">6 pcs</div>
+                <div class="prod-price-row"><span class="prod-price">₹39</span><span class="prod-old">₹49</span></div>
+                <div class="prod-eta">⚡ 10 mins</div>
+                <button class="prod-add">+ ADD</button>
+              </div>
+            </div>
+            <div class="prod-card">
+              <div class="prod-img">🥛</div>
+              <div class="prod-body">
+                <div class="prod-name">Amul Milk</div>
+                <div class="prod-unit">500ml</div>
+                <div class="prod-price-row"><span class="prod-price">₹28</span></div>
+                <div class="prod-eta">⚡ 10 mins</div>
+                <button class="prod-add">+ ADD</button>
+              </div>
+            </div>
+            <div class="prod-card">
+              <div class="prod-img">🍎</div>
+              <div class="prod-body">
+                <div class="prod-name">Red Apples</div>
+                <div class="prod-unit">4 pcs</div>
+                <div class="prod-price-row"><span class="prod-price">₹99</span><span class="prod-old">₹129</span></div>
+                <div class="prod-eta">⚡ 10 mins</div>
+                <button class="prod-add">+ ADD</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Home <span class="badge s-green">Route: /</span></div>
+      </div>
+
+      <!-- CART -->
+      <div class="screen-card">
+        <div class="u-home">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <div style="padding:10px 12px; font-size:13px; font-weight:800; border-bottom:1px solid #f0f0f0; display:flex; align-items:center; gap:8px;">
+            <span>←</span> My Cart <span style="margin-left:auto; font-size:10px; color:#999;">3 items</span>
+          </div>
+          <!-- Delivery info -->
+          <div style="margin:8px 12px; background:#f0f9f2; border-radius:8px; padding:7px 10px; display:flex; align-items:center; gap:6px;">
+            <span style="font-size:14px;">⚡</span>
+            <div><div style="font-size:9px; font-weight:700;">Delivery in 10 mins</div><div style="font-size:8px; color:#666;">Connaught Place, Delhi</div></div>
+          </div>
+          <!-- Items -->
+          <div class="cart-item-row">
+            <span style="font-size:18px;">🍌</span>
+            <div style="flex:1"><div style="font-size:9px; font-weight:700;">Bananas · 6 pcs</div><div style="font-size:8px; color:#999;">₹39</div></div>
+            <div class="qty-ctrl"><span>−</span><div class="sep"><span>2</span></div><span>+</span></div>
+            <span style="font-size:9px; font-weight:700; width:28px; text-align:right;">₹78</span>
+          </div>
+          <div class="cart-item-row">
+            <span style="font-size:18px;">🥛</span>
+            <div style="flex:1"><div style="font-size:9px; font-weight:700;">Amul Milk · 500ml</div><div style="font-size:8px; color:#999;">₹28</div></div>
+            <div class="qty-ctrl"><span>−</span><div class="sep"><span>1</span></div><span>+</span></div>
+            <span style="font-size:9px; font-weight:700; width:28px; text-align:right;">₹28</span>
+          </div>
+          <div class="cart-item-row">
+            <span style="font-size:18px;">🍞</span>
+            <div style="flex:1"><div style="font-size:9px; font-weight:700;">Bread · 400g</div><div style="font-size:8px; color:#999;">₹45</div></div>
+            <div class="qty-ctrl"><span>−</span><div class="sep"><span>1</span></div><span>+</span></div>
+            <span style="font-size:9px; font-weight:700; width:28px; text-align:right;">₹45</span>
+          </div>
+          <div style="height:8px;"></div>
+          <!-- Bill -->
+          <div style="margin:0 12px; background:#f9f9f9; border-radius:8px; padding:8px 10px;">
+            <div style="font-size:9px; font-weight:700; margin-bottom:5px;">Bill Details</div>
+            <div class="bill-row"><span>Item Total</span><span>₹151</span></div>
+            <div class="bill-row"><span>Delivery Fee</span><span style="color:#0c831f;">FREE</span></div>
+            <div class="bill-row"><span>Handling Fee</span><span>₹5</span></div>
+            <div class="bill-row total"><span>To Pay</span><span>₹156</span></div>
+          </div>
+          <div class="spacer"></div>
+          <div class="checkout-btn">Proceed to Checkout → ₹156</div>
+          <div class="spacer"></div>
+        </div>
+        <div class="screen-label">Cart <span class="badge s-blue">Route: /cart</span></div>
+      </div>
+
+      <!-- ORDER TRACKING -->
+      <div class="screen-card">
+        <div class="u-home">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <div style="padding:10px 12px; font-size:13px; font-weight:800; border-bottom:1px solid #f0f0f0; display:flex; align-items:center; gap:8px;">
+            <span>←</span> Order #BLK2024004
+          </div>
+          <!-- ETA banner -->
+          <div style="margin:8px 12px; background:#0c831f; border-radius:10px; padding:10px 12px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:20px;">🚴</span>
+            <div><div style="color:#fff; font-size:11px; font-weight:800;">Arriving in ~10 minutes</div><div style="color:#c8ecd1; font-size:8px;">Driver is on the way</div></div>
+          </div>
+          <!-- Driver -->
+          <div class="driver-row">
+            <div class="driver-av">R</div>
+            <div class="driver-info">
+              <div class="driver-name">Rajesh Kumar</div>
+              <div class="driver-veh">Bike - DL 5S AB 1234</div>
+            </div>
+            <div class="call-btn">📞</div>
+          </div>
+          <!-- Timeline -->
+          <div style="padding:6px 12px 4px; font-size:10px; font-weight:800;">Order Timeline</div>
+          <div class="tracking-steps">
+            <div class="t-step">
+              <div class="t-dot-col"><div class="t-dot done">✓</div><div class="t-line done"></div></div>
+              <div class="t-info"><div class="t-label done">Order Placed</div><div class="t-time">3:00 PM</div></div>
+            </div>
+            <div class="t-step">
+              <div class="t-dot-col"><div class="t-dot done">✓</div><div class="t-line done"></div></div>
+              <div class="t-info"><div class="t-label done">Confirmed</div><div class="t-time">3:01 PM</div></div>
+            </div>
+            <div class="t-step">
+              <div class="t-dot-col"><div class="t-dot done">✓</div><div class="t-line done"></div></div>
+              <div class="t-info"><div class="t-label done">Preparing</div><div class="t-time">3:03 PM</div></div>
+            </div>
+            <div class="t-step">
+              <div class="t-dot-col"><div class="t-dot active">✓</div><div class="t-line"></div></div>
+              <div class="t-info"><div class="t-label done">Out for Delivery</div><div class="t-time" style="color:#0c831f; font-weight:600;">3:09 PM · Now</div></div>
+            </div>
+            <div class="t-step">
+              <div class="t-dot-col"><div class="t-dot todo">5</div></div>
+              <div class="t-info"><div class="t-label todo">Delivered</div></div>
+            </div>
+          </div>
+          <!-- Bill summary -->
+          <div class="divider"></div>
+          <div class="bill-row mt-4"><span class="text-xs">Total Paid</span><span class="text-xs font-bold">₹218 (COD)</span></div>
+          <div class="spacer"></div>
+        </div>
+        <div class="screen-label">Order Tracking <span class="badge s-purple">Route: /orders/:id</span></div>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="screen-card">
+        <div class="u-home">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <div style="padding:24px 16px;">
+            <div style="text-align:center; margin-bottom:20px;">
+              <div style="width:52px; height:52px; background:#0c831f; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:22px;">⚡</div>
+              <div style="font-size:16px; font-weight:900; color:#1c1c1c;">blinkit</div>
+              <div style="font-size:9px; color:#999; margin-top:2px;">Groceries in 10 minutes</div>
+            </div>
+            <div style="font-size:11px; font-weight:700; margin-bottom:10px;">Sign In</div>
+            <div class="ph" style="height:36px; margin-bottom:8px; border-radius:8px; border:1.5px solid #e0e0e0; background:#fff; font-size:10px; color:#bbb; justify-content:flex-start; padding:0 10px;">📧 Email address</div>
+            <div class="ph" style="height:36px; margin-bottom:14px; border-radius:8px; border:1.5px solid #e0e0e0; background:#fff; font-size:10px; color:#bbb; justify-content:flex-start; padding:0 10px;">🔒 Password</div>
+            <div class="green-btn">Sign In →</div>
+            <div style="text-align:center; margin-top:10px; font-size:9px; color:#999;">Don't have an account? <span style="color:#0c831f; font-weight:700;">Register</span></div>
+          </div>
+        </div>
+        <div class="screen-label">Login <span class="badge s-gray">Route: /login</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN PANEL
+══════════════════════════════════════ -->
+<div id="panel-admin" class="panel">
+  <div class="panel-title">⚙️ Admin Panel</div>
+  <div class="panel-sub">Dashboard, user/vendor/driver management, analytics · Port 3001</div>
+
+  <div class="screen-group">
+    <h2>Key Screens</h2>
+    <div class="screen-grid">
+
+      <!-- DASHBOARD -->
+      <div class="screen-card">
+        <div class="admin-layout">
+          <div class="admin-sidebar wide">
+            <div class="sb-logo" style="margin:0 auto 10px;">B</div>
+            <div class="sb-item active"><span class="sb-icon">📊</span><span class="sb-label">Dashboard</span></div>
+            <div class="sb-item"><span class="sb-icon">👥</span><span class="sb-label">Users</span></div>
+            <div class="sb-item"><span class="sb-icon">🏪</span><span class="sb-label">Vendors</span></div>
+            <div class="sb-item"><span class="sb-icon">🚴</span><span class="sb-label">Drivers</span></div>
+            <div class="sb-item"><span class="sb-icon">📦</span><span class="sb-label">Products</span></div>
+            <div class="sb-item"><span class="sb-icon">🗂️</span><span class="sb-label">Categories</span></div>
+            <div class="sb-item"><span class="sb-icon">🛍️</span><span class="sb-label">Orders</span></div>
+            <div class="sb-item" style="margin-top:auto;"><span class="sb-icon">⚙️</span><span class="sb-label">Settings</span></div>
+          </div>
+          <div class="admin-main">
+            <div class="admin-topbar">
+              <span class="pg-title">Dashboard</span>
+              <div class="ta-right">
+                <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+                <div class="av-chip"><div class="av-dot">A</div><span class="av-name">Admin</span></div>
+              </div>
+            </div>
+            <div class="admin-body">
+              <!-- Stats -->
+              <div class="stat-grid">
+                <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val">2,847</div><div class="stat-lbl">Total Users</div><div class="stat-trend">↑ 12%</div></div>
+                <div class="stat-card"><div class="stat-icon">🏪</div><div class="stat-val">48</div><div class="stat-lbl">Vendors</div><div class="stat-trend">↑ 4%</div></div>
+                <div class="stat-card"><div class="stat-icon">🚴</div><div class="stat-val">23</div><div class="stat-lbl">Active Drivers</div><div class="stat-trend">↑ 8%</div></div>
+              </div>
+              <div class="stat-grid">
+                <div class="stat-card"><div class="stat-icon">🛍️</div><div class="stat-val">18,432</div><div class="stat-lbl">Total Orders</div><div class="stat-trend">↑ 23%</div></div>
+                <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val">₹4.2L</div><div class="stat-lbl">Today Revenue</div><div class="stat-trend">↑ 15%</div></div>
+                <div class="stat-card"><div class="stat-icon">📈</div><div class="stat-val">₹1.2Cr</div><div class="stat-lbl">Total Revenue</div><div class="stat-trend">↑ 18%</div></div>
+              </div>
+              <!-- Chart -->
+              <div class="chart-box">
+                <div class="chart-title">Revenue — Last 7 Days</div>
+                <div class="bar-chart">
+                  <div class="bar" style="height:55%;"></div>
+                  <div class="bar" style="height:70%;"></div>
+                  <div class="bar" style="height:45%;"></div>
+                  <div class="bar highlight" style="height:90%;"></div>
+                  <div class="bar" style="height:75%;"></div>
+                  <div class="bar" style="height:60%;"></div>
+                  <div class="bar highlight" style="height:100%;"></div>
+                </div>
+                <div class="bar-labels">
+                  <span class="bar-lbl">Mon</span><span class="bar-lbl">Tue</span><span class="bar-lbl">Wed</span>
+                  <span class="bar-lbl">Thu</span><span class="bar-lbl">Fri</span><span class="bar-lbl">Sat</span><span class="bar-lbl">Sun</span>
+                </div>
+              </div>
+              <!-- Recent Orders mini table -->
+              <div class="mini-table">
+                <div class="mini-table-hdr"><span>Order</span><span>Customer</span><span>Amount</span><span>Status</span></div>
+                <div class="mini-table-row"><span class="bold">#1001</span><span>Aarav S.</span><span>₹214</span><span><span class="status-pill s-yellow">Pending</span></span></div>
+                <div class="mini-table-row"><span class="bold">#1002</span><span>Priya P.</span><span>₹400</span><span><span class="status-pill s-blue">Preparing</span></span></div>
+                <div class="mini-table-row"><span class="bold">#1003</span><span>Rohit V.</span><span>₹443</span><span><span class="status-pill s-purple">On the way</span></span></div>
+                <div class="mini-table-row"><span class="bold">#1004</span><span>Sneha I.</span><span>₹225</span><span><span class="status-pill s-green">Delivered</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Dashboard <span class="badge s-green">Route: /dashboard</span></div>
+      </div>
+
+      <!-- USERS -->
+      <div class="screen-card">
+        <div class="admin-layout">
+          <div class="admin-sidebar">
+            <div class="sb-logo">B</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">📊</div>
+            <div style="font-size:18px; margin:4px 0; background:rgba(248,194,0,.15); border-radius:6px; padding:4px; width:36px; text-align:center;">👥</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">🏪</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">🚴</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">📦</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">🛍️</div>
+          </div>
+          <div class="admin-main">
+            <div class="admin-topbar">
+              <span class="pg-title">Users</span>
+              <div class="ta-right"><div class="ph green" style="padding:4px 10px; border-radius:6px; font-size:9px;">+ Add User</div></div>
+            </div>
+            <div class="admin-body">
+              <div class="users-filters">
+                <span class="filter-pill active">All (2847)</span>
+                <span class="filter-pill">Users</span>
+                <span class="filter-pill">Vendors</span>
+                <span class="filter-pill">Drivers</span>
+              </div>
+              <div class="ph" style="height:28px; border-radius:7px; margin-bottom:8px; font-size:9px;">🔍 Search by name or email</div>
+              <div class="mini-table">
+                <div class="mini-table-hdr"><span>Name</span><span>Role</span><span>Status</span><span>Action</span></div>
+                <div class="mini-table-row">
+                  <div style="flex:1; display:flex; align-items:center; gap:5px;"><div style="width:20px; height:20px; background:#c8ecd1; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#0c831f;">A</div><span class="bold" style="font-size:8px;">Aarav S.</span></div>
+                  <span><span class="status-pill s-blue">User</span></span>
+                  <span><span class="status-pill s-green">Active</span></span>
+                  <span style="font-size:14px; color:#999;">⋯</span>
+                </div>
+                <div class="mini-table-row">
+                  <div style="flex:1; display:flex; align-items:center; gap:5px;"><div style="width:20px; height:20px; background:#dbeafe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#1e40af;">R</div><span class="bold" style="font-size:8px;">Ramesh V.</span></div>
+                  <span><span class="status-pill s-yellow">Vendor</span></span>
+                  <span><span class="status-pill s-yellow">Pending</span></span>
+                  <span style="font-size:14px; color:#999;">⋯</span>
+                </div>
+                <div class="mini-table-row">
+                  <div style="flex:1; display:flex; align-items:center; gap:5px;"><div style="width:20px; height:20px; background:#ede9fe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#5b21b6;">K</div><span class="bold" style="font-size:8px;">Kiran D.</span></div>
+                  <span><span class="status-pill s-purple">Driver</span></span>
+                  <span><span class="status-pill s-green">Active</span></span>
+                  <span style="font-size:14px; color:#999;">⋯</span>
+                </div>
+                <div class="mini-table-row">
+                  <div style="flex:1; display:flex; align-items:center; gap:5px;"><div style="width:20px; height:20px; background:#fee2e2; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#b91c1c;">S</div><span class="bold" style="font-size:8px;">Sita M.</span></div>
+                  <span><span class="status-pill s-blue">User</span></span>
+                  <span><span class="status-pill s-red">Blocked</span></span>
+                  <span style="font-size:14px; color:#999;">⋯</span>
+                </div>
+              </div>
+              <!-- Pagination -->
+              <div style="display:flex; justify-content:center; gap:4px; margin-top:8px;">
+                <div class="ph" style="width:22px; height:22px; border-radius:5px; font-size:9px; font-weight:700; background:#0c831f; color:#fff;">1</div>
+                <div class="ph" style="width:22px; height:22px; border-radius:5px; font-size:9px;">2</div>
+                <div class="ph" style="width:22px; height:22px; border-radius:5px; font-size:9px;">3</div>
+                <div class="ph" style="width:22px; height:22px; border-radius:5px; font-size:9px;">…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Users Management <span class="badge s-blue">Route: /users</span></div>
+      </div>
+
+      <!-- ORDERS ADMIN -->
+      <div class="screen-card">
+        <div class="admin-layout">
+          <div class="admin-sidebar">
+            <div class="sb-logo">B</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">📊</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">👥</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">🏪</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">🚴</div>
+            <div style="font-size:18px; margin:4px 0; opacity:.4;">📦</div>
+            <div style="font-size:18px; margin:4px 0; background:rgba(248,194,0,.15); border-radius:6px; padding:4px; width:36px; text-align:center;">🛍️</div>
+          </div>
+          <div class="admin-main">
+            <div class="admin-topbar"><span class="pg-title">All Orders</span></div>
+            <div class="admin-body">
+              <div class="users-filters" style="flex-wrap:wrap;">
+                <span class="filter-pill active">All</span>
+                <span class="filter-pill">Pending</span>
+                <span class="filter-pill">Preparing</span>
+                <span class="filter-pill">On way</span>
+                <span class="filter-pill">Delivered</span>
+              </div>
+              <div class="mini-table">
+                <div class="mini-table-hdr"><span>#</span><span>Customer</span><span>Amt</span><span>Status</span></div>
+                <div class="mini-table-row"><span class="bold">#1001</span><span>Aarav S.</span><span>₹214</span><span><span class="status-pill s-yellow">Pending</span></span></div>
+                <div class="mini-table-row"><span class="bold">#1002</span><span>Priya P.</span><span>₹400</span><span><span class="status-pill s-blue">Preparing</span></span></div>
+                <div class="mini-table-row"><span class="bold">#1003</span><span>Rohit V.</span><span>₹443</span><span><span class="status-pill s-purple">On way</span></span></div>
+                <div class="mini-table-row"><span class="bold">#1004</span><span>Sneha I.</span><span>₹225</span><span><span class="status-pill s-green">Delivered</span></span></div>
+                <div class="mini-table-row"><span class="bold">#1005</span><span>Karan M.</span><span>₹161</span><span><span class="status-pill s-red">Cancelled</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Orders (Admin) <span class="badge s-purple">Route: /orders</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VENDOR PANEL
+══════════════════════════════════════ -->
+<div id="panel-vendor" class="panel">
+  <div class="panel-title">🏪 Vendor Panel</div>
+  <div class="panel-sub">Store management — orders, inventory, earnings · Port 3002</div>
+
+  <div class="screen-group">
+    <h2>Key Screens</h2>
+    <div class="screen-grid">
+
+      <!-- VENDOR DASHBOARD -->
+      <div class="screen-card">
+        <div class="vendor-layout">
+          <div class="vendor-sidebar">
+            <div class="vs-logo">
+              <div class="vs-logo-icon">🏪</div>
+              <div><div class="vs-store-name">Fresh Farms</div><div class="vs-badge">Online</div></div>
+            </div>
+            <div class="vs-item active"><span class="vs-icon">📊</span><span class="vs-label">Dashboard</span></div>
+            <div class="vs-item"><span class="vs-icon">🛍️</span><span class="vs-label">Orders</span><div class="vs-badge-count">3</div></div>
+            <div class="vs-item"><span class="vs-icon">📦</span><span class="vs-label">Products</span></div>
+            <div class="vs-item"><span class="vs-icon">📋</span><span class="vs-label">Inventory</span></div>
+            <div class="vs-item"><span class="vs-icon">💰</span><span class="vs-label">Earnings</span></div>
+            <div class="vs-item"><span class="vs-icon">👤</span><span class="vs-label">Profile</span></div>
+          </div>
+          <div class="vendor-main">
+            <div class="vendor-topbar">
+              <span style="font-size:11px; font-weight:800;">Dashboard</span>
+              <div class="online-toggle">
+                <span style="font-size:8px; color:#999; margin-right:2px;">Store</span>
+                <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                <span class="online-lbl">Online</span>
+              </div>
+            </div>
+            <div class="vendor-body">
+              <div class="stat-grid" style="grid-template-columns:repeat(2,1fr); gap:6px; margin-bottom:8px;">
+                <div class="stat-card"><div class="stat-val">23</div><div class="stat-lbl">Today's Orders</div></div>
+                <div class="stat-card"><div class="stat-val" style="color:#f59e0b;">5</div><div class="stat-lbl">Pending</div></div>
+                <div class="stat-card"><div class="stat-val">₹8.4K</div><div class="stat-lbl">Today Revenue</div></div>
+                <div class="stat-card"><div class="stat-val">₹2.3L</div><div class="stat-lbl">Total Revenue</div></div>
+              </div>
+              <div class="chart-box" style="padding:8px 10px;">
+                <div class="chart-title">Revenue (7 days)</div>
+                <div class="bar-chart" style="height:50px;">
+                  <div class="bar" style="height:60%;"></div>
+                  <div class="bar highlight" style="height:80%;"></div>
+                  <div class="bar" style="height:55%;"></div>
+                  <div class="bar" style="height:90%;"></div>
+                  <div class="bar highlight" style="height:100%;"></div>
+                  <div class="bar" style="height:70%;"></div>
+                  <div class="bar" style="height:85%;"></div>
+                </div>
+              </div>
+              <!-- Recent orders -->
+              <div style="font-size:9px; font-weight:700; margin-bottom:5px;">New Orders</div>
+              <div class="order-card" style="border-left-color:#ef4444;">
+                <div class="oc-hdr"><span class="oc-id">#BLK-1001</span><span class="oc-time">2 mins ago</span></div>
+                <div class="oc-customer">👤 Aarav Sharma</div>
+                <div class="oc-items">Amul Milk x2, Bread x1, Lays x2</div>
+                <div class="oc-footer"><span class="oc-total">₹214</span><button class="oc-btn accept">Accept</button><button class="oc-btn reject">Reject</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Vendor Dashboard <span class="badge s-green">Route: /dashboard</span></div>
+      </div>
+
+      <!-- ORDERS (VENDOR) -->
+      <div class="screen-card">
+        <div class="vendor-layout">
+          <div class="vendor-sidebar">
+            <div class="vs-logo"><div class="vs-logo-icon">🏪</div></div>
+            <div class="vs-item"><span class="vs-icon">📊</span><span class="vs-label">Dashboard</span></div>
+            <div class="vs-item active"><span class="vs-icon">🛍️</span><span class="vs-label">Orders</span></div>
+            <div class="vs-item"><span class="vs-icon">📦</span><span class="vs-label">Products</span></div>
+            <div class="vs-item"><span class="vs-icon">💰</span><span class="vs-label">Earnings</span></div>
+          </div>
+          <div class="vendor-main">
+            <div class="vendor-topbar"><span style="font-size:11px; font-weight:800;">Orders</span></div>
+            <div class="vendor-body">
+              <div class="users-filters" style="flex-wrap:nowrap; overflow:hidden; gap:4px;">
+                <span class="filter-pill" style="font-size:8px; padding:3px 7px;">All</span>
+                <span class="filter-pill active" style="font-size:8px; padding:3px 7px;">New</span>
+                <span class="filter-pill" style="font-size:8px; padding:3px 7px;">Preparing</span>
+                <span class="filter-pill" style="font-size:8px; padding:3px 7px;">Ready</span>
+                <span class="filter-pill" style="font-size:8px; padding:3px 7px;">Done</span>
+              </div>
+              <div class="order-card" style="border-left-color:#ef4444;">
+                <div class="oc-hdr"><span class="oc-id">#BLK-1001</span><span class="oc-time">2 mins ago 🔴</span></div>
+                <div class="oc-customer">Aarav Sharma · 📞</div>
+                <div class="oc-items">Amul Milk x2, Bread x1, Lays x2</div>
+                <div class="oc-footer"><span class="oc-total">₹214</span><button class="oc-btn accept">✓ Accept</button></div>
+              </div>
+              <div class="order-card" style="border-left-color:#3b82f6;">
+                <div class="oc-hdr"><span class="oc-id">#BLK-1002</span><span class="oc-time">8 mins ago</span></div>
+                <div class="oc-customer">Priya Patel · 📞</div>
+                <div class="oc-items">Banana x1, Yogurt x2, Atta 5kg</div>
+                <div class="oc-footer"><span class="oc-total">₹400</span><button class="oc-btn accept" style="background:#3b82f6;">Preparing →</button></div>
+              </div>
+              <div class="order-card" style="border-left-color:#0c831f;">
+                <div class="oc-hdr"><span class="oc-id">#BLK-1003</span><span class="oc-time">15 mins ago</span></div>
+                <div class="oc-customer">Rohit Verma · 📞</div>
+                <div class="oc-items">Colgate x2, Dove x3, Tropicana x1</div>
+                <div class="oc-footer"><span class="oc-total">₹443</span><button class="oc-btn accept" style="background:#7c3aed;">Mark Ready ✓</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Orders (Vendor) <span class="badge s-yellow">Route: /orders</span></div>
+      </div>
+
+      <!-- INVENTORY -->
+      <div class="screen-card">
+        <div class="vendor-layout">
+          <div class="vendor-sidebar">
+            <div class="vs-logo"><div class="vs-logo-icon">🏪</div></div>
+            <div class="vs-item"><span class="vs-icon">📊</span></div>
+            <div class="vs-item"><span class="vs-icon">🛍️</span></div>
+            <div class="vs-item"><span class="vs-icon">📦</span></div>
+            <div class="vs-item active"><span class="vs-icon">📋</span><span class="vs-label">Inventory</span></div>
+            <div class="vs-item"><span class="vs-icon">💰</span></div>
+          </div>
+          <div class="vendor-main">
+            <div class="vendor-topbar"><span style="font-size:11px; font-weight:800;">Inventory</span></div>
+            <div class="vendor-body">
+              <div class="stat-grid" style="grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
+                <div class="stat-card" style="border-left:3px solid #ef4444;"><div class="stat-val" style="color:#ef4444;">2</div><div class="stat-lbl">Out of Stock</div></div>
+                <div class="stat-card" style="border-left:3px solid #f59e0b;"><div class="stat-val" style="color:#f59e0b;">4</div><div class="stat-lbl">Low Stock</div></div>
+                <div class="stat-card" style="border-left:3px solid #0c831f;"><div class="stat-val" style="color:#0c831f;">17</div><div class="stat-lbl">In Stock</div></div>
+              </div>
+              <div class="mini-table">
+                <div class="mini-table-hdr"><span>Product</span><span>Stock</span><span>Status</span></div>
+                <div class="inv-row"><span class="inv-name">Amul Milk 500ml</span><span class="inv-stock ok">120</span><div class="inv-bar"><div class="inv-bar-fill" style="width:100%; background:#0c831f;"></div></div></div>
+                <div class="inv-row"><span class="inv-name">Tomatoes 500g</span><span class="inv-stock low">8</span><div class="inv-bar"><div class="inv-bar-fill" style="width:7%; background:#f59e0b;"></div></div></div>
+                <div class="inv-row"><span class="inv-name">Brown Eggs 6pc</span><span class="inv-stock out">0</span><div class="inv-bar"><div class="inv-bar-fill" style="width:0; background:#ef4444;"></div></div></div>
+                <div class="inv-row"><span class="inv-name">Dove Soap 75g</span><span class="inv-stock low">7</span><div class="inv-bar"><div class="inv-bar-fill" style="width:6%; background:#f59e0b;"></div></div></div>
+                <div class="inv-row"><span class="inv-name">Lays Classic 26g</span><span class="inv-stock ok">150</span><div class="inv-bar"><div class="inv-bar-fill" style="width:100%; background:#0c831f;"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Inventory <span class="badge s-yellow">Route: /inventory</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DRIVER PANEL
+══════════════════════════════════════ -->
+<div id="panel-driver" class="panel">
+  <div class="panel-title">🚴 Driver Panel</div>
+  <div class="panel-sub">Mobile-first delivery management — accept orders, navigate, OTP confirm · Port 3003</div>
+
+  <div class="screen-group">
+    <h2>Key Screens (Mobile View)</h2>
+    <div class="screen-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px,1fr));">
+
+      <!-- DRIVER DASHBOARD -->
+      <div class="screen-card">
+        <div class="driver-screen">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <div class="d-header">
+            <div class="d-name-row"><div class="d-av">R</div><div class="d-name">Rajesh Kumar</div></div>
+            <div class="d-online-btn">● Online</div>
+            <div class="d-today"><div class="earn">₹650</div><div class="lbl">Today</div></div>
+          </div>
+          <div class="d-body">
+            <!-- Stats -->
+            <div class="d-stat-grid">
+              <div class="d-stat"><div class="val">8</div><div class="lbl">Deliveries</div></div>
+              <div class="d-stat"><div class="val">₹650</div><div class="lbl">Earnings</div></div>
+              <div class="d-stat"><div class="val">13min</div><div class="lbl">Avg Time</div></div>
+              <div class="d-stat"><div class="val">4.8★</div><div class="lbl">Rating</div></div>
+            </div>
+            <!-- Active delivery -->
+            <div class="d-delivery-card">
+              <div class="dc-title"><span>🚴 Active Delivery</span><span style="font-size:8px; color:#c8ecd1;">#BLK-3006</span></div>
+              <div class="dc-step"><div class="step-lbl">Delivering to</div><div class="step-val">Arjun Mehta · 2.5 km</div></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                <div class="dc-earn">+₹48</div>
+                <div style="background:rgba(255,255,255,.2); border-radius:6px; padding:3px 8px; color:#fff; font-size:8px; font-weight:700;">Continue →</div>
+              </div>
+            </div>
+            <!-- Available orders -->
+            <div style="font-size:9px; font-weight:700; margin-bottom:5px;">Available Orders (4)</div>
+            <div class="avail-card">
+              <div class="avail-hdr"><span class="avail-id">#BLK-3001</span><span class="avail-earn">₹45</span></div>
+              <div class="avail-route">
+                <div class="avail-point"><div class="avail-dot" style="background:#0c831f;"></div><span class="avail-addr">Fresh Farms - Connaught Place</span></div>
+                <div class="avail-point"><div class="avail-dot" style="background:#ef4444;"></div><span class="avail-addr">B-42, Rajouri Garden · 4.7 km</span></div>
+              </div>
+              <button class="avail-accept">Accept Order</button>
+            </div>
+          </div>
+          <div class="d-bottom-nav">
+            <div class="d-nav-item active"><div class="d-nav-icon">🏠</div><div class="d-nav-lbl">Home</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">🚴</div><div class="d-nav-lbl">Deliveries</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">💰</div><div class="d-nav-lbl">Earnings</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">👤</div><div class="d-nav-lbl">Profile</div></div>
+          </div>
+        </div>
+        <div class="screen-label">Driver Dashboard <span class="badge s-green">Route: /dashboard</span></div>
+      </div>
+
+      <!-- DELIVERY DETAIL (STEP 2) -->
+      <div class="screen-card">
+        <div class="driver-screen">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <div class="d-header">
+            <div class="d-name-row" style="gap:4px;"><span style="color:#fff; font-size:14px;">←</span><span style="color:#fff; font-size:10px; font-weight:700;">Delivery #BLK-3006</span></div>
+            <div style="background:#f8c200; color:#1c1c1c; border-radius:10px; padding:3px 8px; font-size:9px; font-weight:700;">₹48</div>
+          </div>
+          <div class="d-body" style="padding:8px 10px;">
+            <!-- Steps -->
+            <div style="background:#fff; border-radius:10px; padding:10px; margin-bottom:8px;">
+              <div style="font-size:9px; font-weight:700; margin-bottom:7px;">Delivery Progress</div>
+              <div class="t-step"><div class="t-dot-col"><div class="t-dot done" style="width:18px; height:18px;">✓</div><div class="t-line done"></div></div><div class="t-info"><div class="t-label done" style="font-size:9px;">Order Assigned</div></div></div>
+              <div class="t-step"><div class="t-dot-col"><div class="t-dot done" style="width:18px; height:18px;">✓</div><div class="t-line done"></div></div><div class="t-info"><div class="t-label done" style="font-size:9px;">Reached Store</div></div></div>
+              <div class="t-step"><div class="t-dot-col"><div class="t-dot active" style="width:18px; height:18px; font-size:7px;">3</div><div class="t-line"></div></div><div class="t-info"><div class="t-label done" style="font-size:9px; color:#0c831f;">Order Picked Up ← Now</div></div></div>
+              <div class="t-step"><div class="t-dot-col"><div class="t-dot todo" style="width:18px; height:18px; font-size:7px;">4</div><div class="t-line"></div></div><div class="t-info"><div class="t-label todo" style="font-size:9px;">Out for Delivery</div></div></div>
+              <div class="t-step"><div class="t-dot-col"><div class="t-dot todo" style="width:18px; height:18px; font-size:7px;">5</div></div><div class="t-info"><div class="t-label todo" style="font-size:9px;">Delivered</div></div></div>
+            </div>
+            <!-- Delivery to -->
+            <div style="background:#fff; border-radius:10px; padding:8px 10px; margin-bottom:8px;">
+              <div style="font-size:9px; font-weight:700; color:#ef4444; margin-bottom:4px;">📍 Deliver To</div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div style="flex:1;"><div style="font-size:9px; font-weight:700;">Arjun Mehta</div><div style="font-size:8px; color:#666; margin-top:1px;">12, Green Park Ext, Delhi 110016</div></div>
+                <div style="width:26px; height:26px; background:#0c831f; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;">📞</div>
+              </div>
+              <div style="margin-top:6px; background:#eff6ff; border-radius:7px; padding:4px 8px; display:flex; align-items:center; gap:4px; font-size:8px; color:#1e40af; font-weight:600;">🗺️ Navigate to Customer</div>
+            </div>
+            <!-- Action button -->
+            <div style="background:#0c831f; color:#fff; border-radius:10px; padding:10px; text-align:center; font-size:11px; font-weight:700; margin-bottom:0;">
+              Out for Delivery →
+            </div>
+          </div>
+          <div class="d-bottom-nav">
+            <div class="d-nav-item"><div class="d-nav-icon">🏠</div><div class="d-nav-lbl">Home</div></div>
+            <div class="d-nav-item active"><div class="d-nav-icon">🚴</div><div class="d-nav-lbl">Deliveries</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">💰</div><div class="d-nav-lbl">Earnings</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">👤</div><div class="d-nav-lbl">Profile</div></div>
+          </div>
+        </div>
+        <div class="screen-label">Delivery Detail — Step 3 <span class="badge s-blue">Route: /deliveries/:id</span></div>
+      </div>
+
+      <!-- OTP SCREEN -->
+      <div class="screen-card">
+        <div class="driver-screen">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <div class="d-header">
+            <div class="d-name-row"><span style="color:#fff; font-size:14px;">←</span><span style="color:#fff; font-size:10px; font-weight:700;">Delivery #BLK-3006</span></div>
+            <div style="background:#f8c200; color:#1c1c1c; border-radius:10px; padding:3px 8px; font-size:9px; font-weight:700;">₹48</div>
+          </div>
+          <div class="d-body" style="position:relative;">
+            <!-- Dimmed background -->
+            <div style="filter:blur(1px) opacity(.3);">
+              <div style="background:#fff; border-radius:10px; padding:8px; margin-bottom:8px; height:60px;"></div>
+              <div style="background:#fff; border-radius:10px; padding:8px; margin-bottom:8px; height:80px;"></div>
+            </div>
+            <!-- OTP overlay -->
+            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.4); border-radius:0 0 12px 12px;">
+              <div class="otp-overlay" style="width:90%;">
+                <div class="otp-title">Enter Delivery OTP</div>
+                <div class="otp-sub">Ask the customer for their 4-digit OTP to confirm delivery</div>
+                <div class="otp-boxes">
+                  <div class="otp-box filled">4</div>
+                  <div class="otp-box filled">5</div>
+                  <div class="otp-box filled">2</div>
+                  <div class="otp-box" style="border-color:#e0e0e0;">_</div>
+                </div>
+                <div class="otp-verify-btn">Verify &amp; Complete Delivery</div>
+                <div style="text-align:center; margin-top:8px; font-size:9px; color:#999;">Cancel</div>
+              </div>
+            </div>
+          </div>
+          <div class="d-bottom-nav">
+            <div class="d-nav-item"><div class="d-nav-icon">🏠</div></div>
+            <div class="d-nav-item active"><div class="d-nav-icon">🚴</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">💰</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">👤</div></div>
+          </div>
+        </div>
+        <div class="screen-label">OTP Confirmation <span class="badge s-yellow">Step 4 → Delivered</span></div>
+      </div>
+
+      <!-- EARNINGS -->
+      <div class="screen-card">
+        <div class="driver-screen">
+          <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+          <div class="d-header">
+            <div style="color:#fff; font-size:11px; font-weight:800;">Earnings</div>
+            <div class="d-today"><div class="earn">₹650</div><div class="lbl">Today</div></div>
+          </div>
+          <div class="d-body">
+            <!-- Balance card -->
+            <div style="background:linear-gradient(135deg,#0c831f,#1daa35); border-radius:12px; padding:12px; margin-bottom:10px; color:#fff;">
+              <div style="font-size:9px; color:#c8ecd1;">Total Balance</div>
+              <div style="font-size:22px; font-weight:800; margin:2px 0;">₹2,450</div>
+              <div style="font-size:8px; color:#c8ecd1; margin-bottom:8px;">Available for withdrawal</div>
+              <div style="background:#fff; color:#0c831f; border-radius:8px; padding:6px 12px; font-size:9px; font-weight:700; display:inline-block;">Withdraw to Bank</div>
+            </div>
+            <!-- Tab -->
+            <div style="display:flex; background:#e8e8e8; border-radius:8px; padding:2px; margin-bottom:8px;">
+              <div style="flex:1; background:#fff; border-radius:6px; padding:4px; text-align:center; font-size:8px; font-weight:700;">Today</div>
+              <div style="flex:1; text-align:center; padding:4px; font-size:8px; color:#888;">This Week</div>
+              <div style="flex:1; text-align:center; padding:4px; font-size:8px; color:#888;">This Month</div>
+            </div>
+            <!-- Stats -->
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin-bottom:8px;">
+              <div style="background:#fff; border-radius:8px; padding:6px; text-align:center;"><div style="font-size:11px; font-weight:800;">₹650</div><div style="font-size:7px; color:#999;">Earnings</div></div>
+              <div style="background:#fff; border-radius:8px; padding:6px; text-align:center;"><div style="font-size:11px; font-weight:800;">8</div><div style="font-size:7px; color:#999;">Deliveries</div></div>
+              <div style="background:#fff; border-radius:8px; padding:6px; text-align:center;"><div style="font-size:11px; font-weight:800;">₹81</div><div style="font-size:7px; color:#999;">Avg/Trip</div></div>
+            </div>
+            <!-- Mini bar chart -->
+            <div style="background:#fff; border-radius:8px; padding:8px; margin-bottom:0;">
+              <div style="font-size:8px; font-weight:700; margin-bottom:5px;">Weekly Earnings</div>
+              <div class="bar-chart" style="height:40px;">
+                <div class="bar" style="height:60%; background:#c8ecd1;"></div>
+                <div class="bar highlight" style="height:80%;"></div>
+                <div class="bar" style="height:50%; background:#c8ecd1;"></div>
+                <div class="bar highlight" style="height:100%;"></div>
+                <div class="bar" style="height:90%;"></div>
+                <div class="bar" style="height:70%; background:#c8ecd1;"></div>
+                <div class="bar" style="height:40%; background:#c8ecd1;"></div>
+              </div>
+              <div class="bar-labels">
+                <span class="bar-lbl">M</span><span class="bar-lbl">T</span><span class="bar-lbl">W</span><span class="bar-lbl">T</span><span class="bar-lbl">F</span><span class="bar-lbl">S</span><span class="bar-lbl">S</span>
+              </div>
+            </div>
+          </div>
+          <div class="d-bottom-nav">
+            <div class="d-nav-item"><div class="d-nav-icon">🏠</div><div class="d-nav-lbl">Home</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">🚴</div><div class="d-nav-lbl">Deliveries</div></div>
+            <div class="d-nav-item active"><div class="d-nav-icon">💰</div><div class="d-nav-lbl">Earnings</div></div>
+            <div class="d-nav-item"><div class="d-nav-icon">👤</div><div class="d-nav-lbl">Profile</div></div>
+          </div>
+        </div>
+        <div class="screen-label">Earnings <span class="badge s-green">Route: /earnings</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
