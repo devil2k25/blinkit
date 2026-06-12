@@ -7,29 +7,33 @@ const MOCK_VENDOR = {
   name: 'Fresh Farms Store',
   email: 'vendor@freshfarms.com',
   storeName: 'Fresh Farms',
-  role: 'vendor'
+  role: 'vendor',
 }
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isOnline, setIsOnline] = useState(true)
 
   const login = (email, password) => {
-    // Accept any credentials for demo
-    setUser(MOCK_VENDOR)
-    return true
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setUser(MOCK_VENDOR)
+        setIsAuthenticated(true)
+        resolve({ success: true, user: MOCK_VENDOR })
+      }, 600)
+    })
   }
 
   const logout = () => {
     setUser(null)
+    setIsAuthenticated(false)
   }
 
-  const toggleOnline = () => {
-    setIsOnline(prev => !prev)
-  }
+  const toggleOnline = () => setIsOnline((prev) => !prev)
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isOnline, toggleOnline }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isOnline, login, logout, toggleOnline }}>
       {children}
     </AuthContext.Provider>
   )
