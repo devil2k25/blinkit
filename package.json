@@ -1,0 +1,26 @@
+{
+  "name": "blinkit-replica",
+  "version": "1.0.0",
+  "description": "Full-stack Blinkit replica with User, Admin, Vendor & Driver panels",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "user-panel",
+    "admin-panel",
+    "vendor-panel",
+    "driver-panel"
+  ],
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "user": "cd user-panel && npm run dev",
+    "admin": "cd admin-panel && npm run dev",
+    "vendor": "cd vendor-panel && npm run dev",
+    "driver": "cd driver-panel && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../user-panel && npm install && cd ../admin-panel && npm install && cd ../vendor-panel && npm install && cd ../driver-panel && npm install",
+    "dev": "concurrently \"npm run backend\" \"npm run user\" \"npm run admin\" \"npm run vendor\" \"npm run driver\"",
+    "seed": "cd backend && node src/utils/seedData.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #1c1c1c;
+    margin: 0;
+    padding: 0;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white font-semibold py-2 px-4 rounded-lg hover:bg-primary-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .btn-yellow {
+    @apply bg-yellow text-dark font-bold py-2 px-4 rounded-lg hover:bg-yellow-dark transition-colors duration-200 focus:outline-none;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+  }
+
+  .section-title {
+    @apply text-xl font-bold text-dark mb-4;
+  }
+
+  .badge-delivery {
+    @apply inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-semibold px-2 py-0.5 rounded-full;
+  }
+
+  .badge-discount {
+    @apply inline-block bg-green-100 text-green-700 text-xs font-bold px-1.5 py-0.5 rounded;
+  }
+
+  .nav-link {
+    @apply text-gray-600 hover:text-primary transition-colors font-medium;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .gradient-green {
+    background: linear-gradient(135deg, #0c831f 0%, #1daa35 100%);
+  }
+
+  .gradient-yellow {
+    background: linear-gradient(135deg, #f8c200 0%, #ffdd57 100%);
+  }
+}
+
+/* Cart item animation */
+.cart-item-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.cart-item-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.2s ease;
+}
+.cart-item-exit {
+  opacity: 1;
+}
+.cart-item-exit-active {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.2s ease;
+}
+
+/* Quantity button */
+.qty-btn {
+  @apply w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors;
+}
+
+/* Product card hover effect */
+.product-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Order timeline */
+.timeline-line {
+  @apply absolute left-4 top-8 bottom-0 w-0.5 bg-gray-200;
+}
+.timeline-line.active {
+  @apply bg-primary;
+}
