@@ -2,8 +2,21 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { MOCK_DELIVERIES, WEEKLY_EARNINGS } from '../utils/mockData'
-import { Package, IndianRupee, Clock, Star, ChevronRight, MapPin, Navigation } from 'lucide-react'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Switch from '@mui/material/Switch'
+import Avatar from '@mui/material/Avatar'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
+import InventoryIcon from '@mui/icons-material/Inventory'
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import StarIcon from '@mui/icons-material/Star'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
+import NavigationIcon from '@mui/icons-material/Navigation'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 export default function Dashboard() {
   const { user, isOnline, toggleOnline, activeDelivery, setActiveDelivery } = useAuth()
@@ -22,139 +35,166 @@ export default function Dashboard() {
     }, 800)
   }
 
-  return (
-    <div className="p-4 space-y-4 pb-20">
-      {/* Online Toggle */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm flex items-center justify-between">
-        <div>
-          <p className="text-gray-500 text-sm">Your status</p>
-          <p className={`text-lg font-bold ${isOnline ? 'text-green-600' : 'text-gray-500'}`}>
-            {isOnline ? 'You are Online' : 'You are Offline'}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {isOnline ? 'Ready to receive orders' : 'Go online to accept deliveries'}
-          </p>
-        </div>
-        <button
-          onClick={toggleOnline}
-          className={`w-16 h-9 rounded-full transition-all duration-300 relative flex-shrink-0 ${isOnline ? 'bg-green-500' : 'bg-gray-300'}`}
-        >
-          <div className={`w-7 h-7 bg-white rounded-full shadow-md absolute top-1 transition-all duration-300 ${isOnline ? 'left-8' : 'left-1'}`} />
-        </button>
-      </div>
+  const STATS = [
+    { label: "Today's Deliveries", value: completed.length, icon: <InventoryIcon sx={{ fontSize: 18, color: '#2563eb' }} />, bg: '#eff6ff' },
+    { label: "Today's Earnings", value: '₹650', icon: <CurrencyRupeeIcon sx={{ fontSize: 18, color: '#0c831f' }} />, bg: '#f0fdf4' },
+    { label: 'Avg Time', value: '13 min', icon: <AccessTimeIcon sx={{ fontSize: 18, color: '#d97706' }} />, bg: '#fefce8' },
+    { label: 'Your Rating', value: `${user?.rating || 4.8}★`, icon: <StarIcon sx={{ fontSize: 18, color: '#7c3aed' }} />, bg: '#faf5ff' },
+  ]
 
-      {/* Active Delivery */}
+  return (
+    <Box sx={{ p: 2, pb: '80px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      {/* Online Toggle Card */}
+      <Card>
+        <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 2 }}>
+          <Box>
+            <Typography variant="caption" sx={{ color: '#6b7280' }}>Your status</Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: 700, color: isOnline ? '#0c831f' : '#6b7280' }}
+            >
+              {isOnline ? 'You are Online' : 'You are Offline'}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#9ca3af' }}>
+              {isOnline ? 'Ready to receive orders' : 'Go online to accept deliveries'}
+            </Typography>
+          </Box>
+          <Switch
+            checked={isOnline}
+            onChange={toggleOnline}
+            color="primary"
+            sx={{ flexShrink: 0 }}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Active Delivery Banner */}
       {activeDelivery && (
-        <div
-          className="bg-green-600 rounded-2xl p-4 shadow-lg cursor-pointer active:scale-95 transition-transform"
+        <Box
           onClick={() => navigate(`/deliveries/${activeDelivery.id}`)}
+          sx={{
+            bgcolor: '#0c831f',
+            borderRadius: 3,
+            p: 2,
+            cursor: 'pointer',
+            boxShadow: '0 4px 16px rgba(12,131,31,0.3)',
+            '&:active': { transform: 'scale(0.98)' },
+          }}
         >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <Package size={16} className="text-white" />
-              </div>
-              <span className="text-white font-bold">Active Delivery</span>
-            </div>
-            <span className="text-green-200 text-sm">{activeDelivery.orderId}</span>
-          </div>
-          <p className="text-white text-sm font-medium">{activeDelivery.delivery.customerName}</p>
-          <p className="text-green-200 text-xs mt-1 flex items-center gap-1">
-            <MapPin size={12} /> {activeDelivery.delivery.address}
-          </p>
-          <div className="flex items-center justify-between mt-3">
-            <span className="text-yellow-300 font-bold">₹{activeDelivery.earnings}</span>
-            <div className="flex items-center gap-1 text-white text-sm">
-              <Navigation size={14} />
-              <span>Continue</span>
-              <ChevronRight size={16} />
-            </div>
-          </div>
-        </div>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
+                <InventoryIcon sx={{ fontSize: 16, color: '#fff' }} />
+              </Avatar>
+              <Typography sx={{ color: '#fff', fontWeight: 700 }}>Active Delivery</Typography>
+            </Box>
+            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>{activeDelivery.orderId}</Typography>
+          </Box>
+          <Typography variant="body2" sx={{ color: '#fff', fontWeight: 600 }}>{activeDelivery.delivery.customerName}</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
+            <LocationOnIcon sx={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }} />
+            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>{activeDelivery.delivery.address}</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1.5 }}>
+            <Typography sx={{ color: '#f8c200', fontWeight: 700 }}>₹{activeDelivery.earnings}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <NavigationIcon sx={{ fontSize: 14, color: '#fff' }} />
+              <Typography variant="body2" sx={{ color: '#fff' }}>Continue</Typography>
+              <ChevronRightIcon sx={{ fontSize: 16, color: '#fff' }} />
+            </Box>
+          </Box>
+        </Box>
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: "Today's Deliveries", value: completed.length, icon: Package, color: 'bg-blue-50 text-blue-600' },
-          { label: "Today's Earnings", value: '₹650', icon: IndianRupee, color: 'bg-green-50 text-green-600' },
-          { label: 'Avg Time', value: '13 min', icon: Clock, color: 'bg-yellow-50 text-yellow-600' },
-          { label: 'Your Rating', value: `${user?.rating || 4.8}★`, icon: Star, color: 'bg-purple-50 text-purple-600' },
-        ].map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-white rounded-2xl p-4 shadow-sm">
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-2 ${color.split(' ')[0]}`}>
-              <Icon size={18} className={color.split(' ')[1]} />
-            </div>
-            <p className="text-2xl font-bold text-gray-800">{value}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{label}</p>
-          </div>
+      {/* Stats Grid */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+        {STATS.map(({ label, value, icon, bg }) => (
+          <Card key={label}>
+            <CardContent sx={{ p: '12px !important' }}>
+              <Box sx={{ width: 36, height: 36, borderRadius: 2, bgcolor: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+                {icon}
+              </Box>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: '#1f2937', lineHeight: 1 }}>{value}</Typography>
+              <Typography variant="caption" sx={{ color: '#6b7280' }}>{label}</Typography>
+            </CardContent>
+          </Card>
         ))}
-      </div>
+      </Box>
 
       {/* Weekly Chart */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <h3 className="font-bold text-gray-800 mb-4">This Week</h3>
-        <ResponsiveContainer width="100%" height={140}>
-          <BarChart data={WEEKLY_EARNINGS} barSize={20}>
-            <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-            <YAxis hide />
-            <Tooltip
-              formatter={(v) => [`₹${v}`, 'Earnings']}
-              contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-            />
-            <Bar dataKey="amount" fill="#22c55e" radius={[6, 6, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <Card>
+        <CardContent>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1f2937', mb: 2 }}>This Week</Typography>
+          <ResponsiveContainer width="100%" height={140}>
+            <BarChart data={WEEKLY_EARNINGS} barSize={20}>
+              <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+              <YAxis hide />
+              <Tooltip
+                formatter={(v) => [`₹${v}`, 'Earnings']}
+                contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+              />
+              <Bar dataKey="amount" fill="#0c831f" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
 
       {/* Available Orders */}
       {isOnline && (
-        <div>
-          <h3 className="font-bold text-gray-800 mb-3">Available Orders ({available.length})</h3>
-          <div className="space-y-3">
+        <Box>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1f2937', mb: 1.5 }}>
+            Available Orders ({available.length})
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             {available.slice(0, 3).map((delivery) => (
-              <div key={delivery.id} className="bg-white rounded-2xl p-4 shadow-sm">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <p className="font-bold text-sm text-gray-800">{delivery.orderId}</p>
-                    <p className="text-xs text-gray-500">{delivery.estimatedTime} · {delivery.distance}</p>
-                  </div>
-                  <span className="text-green-600 font-bold">₹{delivery.earnings}</span>
-                </div>
-                <div className="space-y-1.5 mb-3">
-                  <div className="flex items-start gap-2">
-                    <div className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <div className="w-2 h-2 rounded-full bg-green-500" />
-                    </div>
-                    <p className="text-xs text-gray-600">{delivery.pickup.storeName}</p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <div className="w-2 h-2 rounded-full bg-red-500" />
-                    </div>
-                    <p className="text-xs text-gray-600">{delivery.delivery.address}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleAccept(delivery)}
-                  disabled={accepting === delivery.id}
-                  className="w-full py-2.5 bg-green-600 text-white font-bold text-sm rounded-xl disabled:opacity-60"
-                >
-                  {accepting === delivery.id ? 'Accepting...' : 'Accept Order'}
-                </button>
-              </div>
+              <Card key={delivery.id}>
+                <CardContent sx={{ p: '12px !important' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1.5 }}>
+                    <Box>
+                      <Typography variant="body2" sx={{ fontWeight: 700, color: '#1f2937' }}>{delivery.orderId}</Typography>
+                      <Typography variant="caption" sx={{ color: '#6b7280' }}>{delivery.estimatedTime} · {delivery.distance}</Typography>
+                    </Box>
+                    <Typography sx={{ fontWeight: 700, color: '#0c831f' }}>₹{delivery.earnings}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mb: 1.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, mt: 0.25 }}>
+                        <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#0c831f' }} />
+                      </Box>
+                      <Typography variant="caption" sx={{ color: '#4b5563' }}>{delivery.pickup.storeName}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, mt: 0.25 }}>
+                        <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#ef4444' }} />
+                      </Box>
+                      <Typography variant="caption" sx={{ color: '#4b5563' }}>{delivery.delivery.address}</Typography>
+                    </Box>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    size="small"
+                    onClick={() => handleAccept(delivery)}
+                    disabled={accepting === delivery.id}
+                  >
+                    {accepting === delivery.id ? 'Accepting...' : 'Accept Order'}
+                  </Button>
+                </CardContent>
+              </Card>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {!isOnline && (
-        <div className="bg-gray-50 rounded-2xl p-8 text-center">
-          <p className="text-4xl mb-3">😴</p>
-          <p className="text-gray-600 font-medium">You're offline</p>
-          <p className="text-gray-400 text-sm mt-1">Go online to start accepting delivery orders</p>
-        </div>
+        <Card>
+          <CardContent sx={{ py: 4, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: 40, mb: 1.5 }}>😴</Typography>
+            <Typography variant="body1" sx={{ color: '#4b5563', fontWeight: 600 }}>You're offline</Typography>
+            <Typography variant="caption" sx={{ color: '#9ca3af' }}>Go online to start accepting delivery orders</Typography>
+          </CardContent>
+        </Card>
       )}
-    </div>
+    </Box>
   )
 }

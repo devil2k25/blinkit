@@ -1,6 +1,7 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
+import Box from '@mui/material/Box'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Header from './components/layout/Header'
 import BottomNav from './components/layout/BottomNav'
@@ -19,13 +20,13 @@ function ProtectedRoute({ children }) {
 
 function Layout({ children }) {
   return (
-    <div className="flex flex-col h-full">
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Header />
-      <main className="flex-1 overflow-y-auto pb-16">
+      <Box component="main" sx={{ flex: 1, overflowY: 'auto', pb: '64px' }}>
         {children}
-      </main>
+      </Box>
       <BottomNav />
-    </div>
+    </Box>
   )
 }
 
@@ -82,17 +83,32 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="min-h-screen bg-gray-100 flex justify-center">
-          <div className="w-full max-w-[430px] bg-white min-h-screen relative flex flex-col">
+        <Box
+          sx={{
+            minHeight: '100vh',
+            backgroundColor: '#f5f6fa',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: 430,
+              backgroundColor: '#fff',
+              minHeight: '100vh',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
             <AppRoutes />
             <Toaster
               position="top-center"
-              toastOptions={{
-                style: { maxWidth: '380px' }
-              }}
+              toastOptions={{ style: { maxWidth: '380px' } }}
             />
-          </div>
-        </div>
+          </Box>
+        </Box>
       </BrowserRouter>
     </AuthProvider>
   )

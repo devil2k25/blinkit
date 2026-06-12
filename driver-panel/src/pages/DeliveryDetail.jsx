@@ -2,7 +2,26 @@ import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { MOCK_DELIVERIES, ACTIVE_DELIVERY } from '../utils/mockData'
-import { Phone, Navigation, CheckCircle, Package, MapPin, User } from 'lucide-react'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Chip from '@mui/material/Chip'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
+import Avatar from '@mui/material/Avatar'
+import Stepper from '@mui/material/Stepper'
+import Step from '@mui/material/Step'
+import StepLabel from '@mui/material/StepLabel'
+import PhoneIcon from '@mui/icons-material/Phone'
+import NavigationIcon from '@mui/icons-material/Navigation'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import InventoryIcon from '@mui/icons-material/Inventory'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
 import toast from 'react-hot-toast'
 
 const STEPS = [
@@ -30,12 +49,12 @@ export default function DeliveryDetail() {
 
   if (!delivery) {
     return (
-      <div className="p-4 text-center py-20">
-        <p className="text-gray-500">Delivery not found</p>
-        <button onClick={() => navigate('/deliveries')} className="mt-4 text-green-600 font-medium">
+      <Box sx={{ p: 2, textAlign: 'center', py: 10 }}>
+        <Typography sx={{ color: '#6b7280' }}>Delivery not found</Typography>
+        <Button onClick={() => navigate('/deliveries')} sx={{ mt: 2, color: '#0c831f' }}>
           Go Back
-        </button>
-      </div>
+        </Button>
+      </Box>
     )
   }
 
@@ -64,171 +83,226 @@ export default function DeliveryDetail() {
     }
   }
 
+  const handleOtpChange = (index, value) => {
+    const val = value.replace(/\D/g, '')
+    const chars = otp.split('')
+    chars[index] = val
+    const newOtp = chars.join('').slice(0, 4)
+    setOtp(newOtp)
+    setOtpError('')
+  }
+
   const buttonLabels = ['Reached Store', 'Order Picked Up', 'Out for Delivery', 'Mark Delivered']
 
   return (
-    <div className="p-4 pb-20 space-y-4">
+    <Box sx={{ p: 2, pb: '80px', display: 'flex', flexDirection: 'column', gap: 2 }}>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-500">Active Delivery</p>
-          <h2 className="text-xl font-bold text-gray-800">{delivery.orderId}</h2>
-        </div>
-        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-          ₹{delivery.earnings}
-        </span>
-      </div>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box>
+          <Typography variant="caption" sx={{ color: '#6b7280' }}>Active Delivery</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#1f2937' }}>{delivery.orderId}</Typography>
+        </Box>
+        <Chip
+          label={`₹${delivery.earnings}`}
+          sx={{ bgcolor: '#dcfce7', color: '#15803d', fontWeight: 700 }}
+        />
+      </Box>
 
-      {/* Progress Steps */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <h3 className="font-bold text-gray-800 mb-4">Delivery Progress</h3>
-        <div className="space-y-3">
-          {STEPS.map((s, i) => (
-            <div key={s.id} className="flex items-start gap-3">
-              <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  i < step ? 'bg-green-500' : i === step ? 'bg-green-600 ring-4 ring-green-100' : 'bg-gray-200'
-                }`}>
-                  {i < step ? (
-                    <CheckCircle size={16} className="text-white" />
-                  ) : (
-                    <span className={`text-sm font-bold ${i === step ? 'text-white' : 'text-gray-400'}`}>{i + 1}</span>
+      {/* Progress Stepper */}
+      <Card>
+        <CardContent>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1f2937', mb: 2 }}>Delivery Progress</Typography>
+          <Stepper activeStep={step} orientation="vertical" sx={{
+            '& .MuiStepConnector-line': { minHeight: 24 },
+            '& .MuiStepLabel-label': { fontWeight: 600 },
+          }}>
+            {STEPS.map((s, i) => (
+              <Step key={s.id} completed={i < step}>
+                <StepLabel
+                  sx={{
+                    '& .MuiStepLabel-label': {
+                      color: i <= step ? '#1f2937' : '#9ca3af',
+                      fontWeight: i === step ? 700 : 500,
+                    },
+                    '& .MuiStepIcon-root': {
+                      color: i < step ? '#0c831f' : i === step ? '#0c831f' : '#e5e7eb',
+                    },
+                    '& .MuiStepIcon-text': { fill: '#fff' },
+                  }}
+                >
+                  {s.label}
+                  {i === step && (
+                    <Typography variant="caption" sx={{ color: '#0c831f', display: 'block' }}>{s.description}</Typography>
                   )}
-                </div>
-                {i < STEPS.length - 1 && (
-                  <div className={`w-0.5 h-6 mt-1 ${i < step ? 'bg-green-400' : 'bg-gray-200'}`} />
-                )}
-              </div>
-              <div className="pt-1">
-                <p className={`text-sm font-medium ${i <= step ? 'text-gray-800' : 'text-gray-400'}`}>{s.label}</p>
-                {i === step && <p className="text-xs text-green-600 mt-0.5">{s.description}</p>}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </CardContent>
+      </Card>
 
       {/* Pickup Info */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <div className="flex items-center gap-2 mb-3">
-          <Package size={16} className="text-green-600" />
-          <h3 className="font-bold text-gray-800">Pickup</h3>
-        </div>
-        <p className="text-sm font-medium text-gray-800">{delivery.pickup.storeName}</p>
-        <p className="text-xs text-gray-500 mt-1">{delivery.pickup.address}</p>
-        <p className="text-xs text-gray-400 mt-1">{delivery.pickup.distance} away</p>
-        <button
-          className="mt-3 flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm font-medium"
-          onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(delivery.pickup.address)}`)}
-        >
-          <Navigation size={14} />
-          Navigate to Store
-        </button>
-      </div>
+      <Card>
+        <CardContent>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+            <InventoryIcon sx={{ fontSize: 16, color: '#0c831f' }} />
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#1f2937' }}>Pickup</Typography>
+          </Box>
+          <Typography variant="body2" sx={{ fontWeight: 600, color: '#1f2937' }}>{delivery.pickup.storeName}</Typography>
+          <Typography variant="caption" sx={{ color: '#6b7280', display: 'block', mt: 0.5 }}>{delivery.pickup.address}</Typography>
+          <Typography variant="caption" sx={{ color: '#9ca3af', display: 'block', mt: 0.5 }}>{delivery.pickup.distance} away</Typography>
+          <Button
+            startIcon={<NavigationIcon />}
+            size="small"
+            onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(delivery.pickup.address)}`)}
+            sx={{ mt: 1.5, color: '#2563eb', bgcolor: '#eff6ff', '&:hover': { bgcolor: '#dbeafe' }, borderRadius: 2, px: 2 }}
+          >
+            Navigate to Store
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Delivery Info */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <div className="flex items-center gap-2 mb-3">
-          <MapPin size={16} className="text-red-500" />
-          <h3 className="font-bold text-gray-800">Delivery</h3>
-        </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-800">{delivery.delivery.customerName}</p>
-            <p className="text-xs text-gray-500 mt-1">{delivery.delivery.address}</p>
-            <p className="text-xs text-gray-400 mt-1">{delivery.delivery.distance} away</p>
-          </div>
-          <a
-            href={`tel:${delivery.delivery.phone}`}
-            className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center"
+      <Card>
+        <CardContent>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+            <LocationOnIcon sx={{ fontSize: 16, color: '#ef4444' }} />
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#1f2937' }}>Delivery</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <Box>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: '#1f2937' }}>{delivery.delivery.customerName}</Typography>
+              <Typography variant="caption" sx={{ color: '#6b7280', display: 'block', mt: 0.5 }}>{delivery.delivery.address}</Typography>
+              <Typography variant="caption" sx={{ color: '#9ca3af', display: 'block', mt: 0.5 }}>{delivery.delivery.distance} away</Typography>
+            </Box>
+            <IconButton
+              component="a"
+              href={`tel:${delivery.delivery.phone}`}
+              sx={{ width: 40, height: 40, bgcolor: '#dcfce7' }}
+            >
+              <PhoneIcon sx={{ fontSize: 18, color: '#0c831f' }} />
+            </IconButton>
+          </Box>
+          <Button
+            startIcon={<NavigationIcon />}
+            size="small"
+            onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(delivery.delivery.address)}`)}
+            sx={{ mt: 1.5, color: '#2563eb', bgcolor: '#eff6ff', '&:hover': { bgcolor: '#dbeafe' }, borderRadius: 2, px: 2 }}
           >
-            <Phone size={18} className="text-green-600" />
-          </a>
-        </div>
-        <button
-          className="mt-3 flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm font-medium"
-          onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(delivery.delivery.address)}`)}
-        >
-          <Navigation size={14} />
-          Navigate to Customer
-        </button>
-      </div>
+            Navigate to Customer
+          </Button>
+        </CardContent>
+      </Card>
 
-      {/* Items */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <h3 className="font-bold text-gray-800 mb-2">Order Items</h3>
-        <ul className="space-y-1">
-          {delivery.items.map((item, i) => (
-            <li key={i} className="text-sm text-gray-600 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0" />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Order Items */}
+      <Card>
+        <CardContent>
+          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#1f2937', mb: 1 }}>Order Items</Typography>
+          <Box component="ul" sx={{ pl: 0, m: 0, listStyle: 'none' }}>
+            {delivery.items.map((item, i) => (
+              <Box component="li" key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#4ade80', flexShrink: 0 }} />
+                <Typography variant="body2" sx={{ color: '#4b5563' }}>{item}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </CardContent>
+      </Card>
 
-      {/* OTP Modal */}
-      {showOtp && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-          <div className="w-full max-w-[430px] mx-auto bg-white rounded-t-3xl p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Enter Delivery OTP</h3>
-            <p className="text-gray-500 text-sm mb-6">Ask the customer for their 4-digit OTP to confirm delivery</p>
-            <div className="flex gap-3 mb-2">
-              {[0, 1, 2, 3].map(i => (
-                <input
-                  key={i}
-                  type="tel"
-                  maxLength={1}
-                  value={otp[i] || ''}
-                  onChange={e => {
-                    const val = e.target.value.replace(/\D/g, '')
-                    const newOtp = otp.split('')
-                    newOtp[i] = val
-                    setOtp(newOtp.join('').slice(0, 4))
-                    setOtpError('')
-                    if (val && e.target.nextSibling) e.target.nextSibling.focus()
-                  }}
-                  className="w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:border-green-500 focus:outline-none"
-                />
-              ))}
-            </div>
-            {otpError && <p className="text-red-500 text-sm mb-3">{otpError}</p>}
-            <div className="flex gap-3 mt-4">
-              <button
-                onClick={() => { setShowOtp(false); setOtp(''); setOtpError('') }}
-                className="flex-1 py-3 border border-gray-300 text-gray-600 font-medium rounded-xl"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleVerifyOtp}
-                disabled={otp.length < 4}
-                className="flex-1 py-3 bg-green-600 text-white font-bold rounded-xl disabled:opacity-50"
-              >
-                Verify & Complete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* OTP Dialog */}
+      <Dialog
+        open={showOtp}
+        onClose={() => { setShowOtp(false); setOtp(''); setOtpError('') }}
+        PaperProps={{
+          sx: {
+            position: 'fixed',
+            bottom: 0,
+            m: 0,
+            width: '100%',
+            maxWidth: 430,
+            borderRadius: '24px 24px 0 0',
+            p: 1,
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 700, fontSize: 18, pb: 0.5 }}>Enter Delivery OTP</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ color: '#6b7280', mb: 3 }}>
+            Ask the customer for their 4-digit OTP to confirm delivery
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1.5, mb: 1 }}>
+            {[0, 1, 2, 3].map(i => (
+              <TextField
+                key={i}
+                type="tel"
+                value={otp[i] || ''}
+                onChange={e => {
+                  handleOtpChange(i, e.target.value)
+                  if (e.target.value && e.target.nextSibling) {
+                    const next = e.target.closest('.MuiInputBase-root')?.parentElement?.nextSibling?.querySelector('input')
+                    if (next) next.focus()
+                  }
+                }}
+                size="small"
+                inputProps={{
+                  maxLength: 1,
+                  style: { textAlign: 'center', fontSize: 24, fontWeight: 700, padding: '10px 0' },
+                }}
+                sx={{
+                  width: 56,
+                  '& .MuiOutlinedInput-root': {
+                    height: 56,
+                    borderRadius: 2,
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0c831f' },
+                  },
+                }}
+              />
+            ))}
+          </Box>
+          {otpError && (
+            <Typography variant="caption" sx={{ color: '#ef4444', display: 'block', mb: 1 }}>{otpError}</Typography>
+          )}
+          <Box sx={{ display: 'flex', gap: 1.5, mt: 2 }}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => { setShowOtp(false); setOtp(''); setOtpError('') }}
+              sx={{ borderColor: '#d1d5db', color: '#4b5563' }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={handleVerifyOtp}
+              disabled={otp.length < 4}
+            >
+              Verify & Complete
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
 
       {/* Action Button */}
       {step < 4 && (
-        <button
+        <Button
+          variant="contained"
+          fullWidth
+          size="large"
           onClick={handleNext}
-          className="w-full py-4 bg-green-600 text-white font-bold text-base rounded-2xl shadow-lg active:scale-95 transition-transform"
+          sx={{ py: 1.75, fontSize: 16, fontWeight: 700, borderRadius: 3, boxShadow: '0 4px 16px rgba(12,131,31,0.3)' }}
         >
           {buttonLabels[step]}
-        </button>
+        </Button>
       )}
 
       {step === 4 && (
-        <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
-          <CheckCircle size={40} className="text-green-500 mx-auto mb-2" />
-          <p className="font-bold text-green-700 text-lg">Delivery Complete!</p>
-          <p className="text-green-600 text-sm mt-1">You earned ₹{delivery.earnings}</p>
-        </div>
+        <Box sx={{ bgcolor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 3, p: 3, textAlign: 'center' }}>
+          <CheckCircleIcon sx={{ fontSize: 40, color: '#22c55e', mb: 1 }} />
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#15803d' }}>Delivery Complete!</Typography>
+          <Typography variant="body2" sx={{ color: '#0c831f', mt: 0.5 }}>You earned ₹{delivery.earnings}</Typography>
+        </Box>
       )}
-    </div>
+    </Box>
   )
 }

@@ -1,7 +1,20 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Truck, Phone, Lock, Eye, EyeOff } from 'lucide-react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import Avatar from '@mui/material/Avatar'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import PhoneIcon from '@mui/icons-material/Phone'
+import LockIcon from '@mui/icons-material/Lock'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import toast from 'react-hot-toast'
 
 export default function Login() {
@@ -27,69 +40,107 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#1a1a2e' }}>
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        {/* Logo */}
-        <div className="mb-8 flex flex-col items-center">
-          <div className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center mb-4">
-            <Truck size={40} className="text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-white">Blinkit Driver</h1>
-          <p className="text-gray-400 mt-1 text-sm">Deliver fast, earn more</p>
-        </div>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#1a1a2e',
+        px: 3,
+        py: 6,
+      }}
+    >
+      {/* Logo */}
+      <Box sx={{ mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Avatar
+          sx={{
+            width: 80,
+            height: 80,
+            bgcolor: '#0c831f',
+            mb: 2,
+          }}
+        >
+          <LocalShippingIcon sx={{ fontSize: 40 }} />
+        </Avatar>
+        <Typography variant="h4" sx={{ color: '#fff', fontWeight: 700 }}>
+          Blinkit Driver
+        </Typography>
+        <Typography variant="body2" sx={{ color: '#9ca3af', mt: 0.5 }}>
+          Deliver fast, earn more
+        </Typography>
+      </Box>
 
-        {/* Form */}
-        <div className="w-full bg-white rounded-2xl p-6 shadow-2xl">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">Sign In</h2>
+      {/* Form Card */}
+      <Card sx={{ width: '100%', borderRadius: 3, boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}>
+        <CardContent sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#1f2937', mb: 3 }}>
+            Sign In
+          </Typography>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <div className="relative">
-                <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={e => setPhone(e.target.value)}
-                  placeholder="Enter your phone number"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-                  required
-                />
-              </div>
-            </div>
+          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="Phone Number"
+              type="tel"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              placeholder="Enter your phone number"
+              required
+              fullWidth
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PhoneIcon fontSize="small" sx={{ color: '#9ca3af' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <div className="relative">
-                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-                  required
-                />
-                <button type="button" onClick={() => setShowPass(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
+            <TextField
+              label="Password"
+              type={showPass ? 'text' : 'password'}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+              fullWidth
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon fontSize="small" sx={{ color: '#9ca3af' }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton size="small" onClick={() => setShowPass(v => !v)} edge="end">
+                      {showPass ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-            <button
+            <Button
               type="submit"
+              variant="contained"
+              fullWidth
               disabled={loading}
-              className="w-full py-3 bg-green-600 text-white font-bold rounded-xl text-base disabled:opacity-50 active:scale-95 transition-transform"
+              sx={{ py: 1.5, fontSize: 16, fontWeight: 700, mt: 1 }}
             >
               {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
+            </Button>
+          </Box>
 
-          <div className="mt-4 p-3 bg-gray-50 rounded-xl">
-            <p className="text-xs text-gray-500 text-center">Demo: any phone + password</p>
-          </div>
-        </div>
-      </div>
-    </div>
+          <Box sx={{ mt: 2, p: 1.5, bgcolor: '#f9fafb', borderRadius: 2 }}>
+            <Typography variant="caption" sx={{ color: '#6b7280', display: 'block', textAlign: 'center' }}>
+              Demo: any phone + password
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }

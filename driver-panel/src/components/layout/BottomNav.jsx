@@ -1,31 +1,57 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { Home, Truck, IndianRupee, User } from 'lucide-react'
+import React, { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import BottomNavigation from '@mui/material/BottomNavigation'
+import BottomNavigationAction from '@mui/material/BottomNavigationAction'
+import Paper from '@mui/material/Paper'
+import HomeIcon from '@mui/icons-material/Home'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee'
+import PersonIcon from '@mui/icons-material/Person'
 
 const NAV_ITEMS = [
-  { label: 'Home', icon: Home, path: '/dashboard' },
-  { label: 'Deliveries', icon: Truck, path: '/deliveries' },
-  { label: 'Earnings', icon: IndianRupee, path: '/earnings' },
-  { label: 'Profile', icon: User, path: '/profile' }
+  { label: 'Dashboard', icon: <HomeIcon />, path: '/dashboard' },
+  { label: 'Deliveries', icon: <LocalShippingIcon />, path: '/deliveries' },
+  { label: 'Earnings', icon: <CurrencyRupeeIcon />, path: '/earnings' },
+  { label: 'Profile', icon: <PersonIcon />, path: '/profile' },
 ]
 
 export default function BottomNav() {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const currentIndex = NAV_ITEMS.findIndex(item => location.pathname.startsWith(item.path))
+  const value = currentIndex >= 0 ? currentIndex : 0
+
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-200 shadow-lg h-16 z-50 flex">
-      {NAV_ITEMS.map(({ label, icon: Icon, path }) => (
-        <NavLink
-          key={path}
-          to={path}
-          className={({ isActive }) =>
-            `flex-1 flex flex-col items-center justify-center transition-colors ${
-              isActive ? 'text-green-700' : 'text-gray-400'
-            }`
-          }
-        >
-          <Icon size={20} />
-          <span className="text-xs mt-1">{label}</span>
-        </NavLink>
-      ))}
-    </nav>
+    <Paper
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100%',
+        maxWidth: 430,
+        zIndex: 50,
+      }}
+      elevation={3}
+    >
+      <BottomNavigation
+        value={value}
+        onChange={(_, newValue) => navigate(NAV_ITEMS[newValue].path)}
+        showLabels
+        sx={{
+          '& .Mui-selected': { color: '#0c831f' },
+          '& .MuiBottomNavigationAction-root': { minWidth: 0 },
+        }}
+      >
+        {NAV_ITEMS.map(item => (
+          <BottomNavigationAction
+            key={item.path}
+            label={item.label}
+            icon={item.icon}
+          />
+        ))}
+      </BottomNavigation>
+    </Paper>
   )
 }
