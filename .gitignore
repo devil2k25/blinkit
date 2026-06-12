@@ -32,3 +32,6 @@ Thumbs.db
 # Vite cache
 .vite/
 **/.vite/
+
+# Claude Code internal
+.claude/
