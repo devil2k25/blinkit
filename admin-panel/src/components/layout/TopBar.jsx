@@ -1,40 +1,78 @@
-import { Bell, Search, Menu } from 'lucide-react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
+import InputBase from '@mui/material/InputBase';
+import MenuIcon from '@mui/icons-material/Menu';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../../context/AuthContext';
 
 export default function TopBar({ onMenuClick }) {
   const { admin } = useAuth();
   return (
-    <header className="bg-white shadow-sm px-6 py-3 flex items-center justify-between border-b border-gray-100">
-      <div className="flex items-center gap-4">
-        <button
+    <AppBar
+      position="static"
+      color="inherit"
+      elevation={0}
+      sx={{ borderBottom: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}
+    >
+      <Toolbar sx={{ gap: 2, minHeight: { xs: 56, sm: 64 } }}>
+        {/* Mobile menu button */}
+        <IconButton
           onClick={onMenuClick}
-          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-600"
+          sx={{ display: { lg: 'none' }, color: 'text.secondary' }}
+          size="small"
         >
-          <Menu size={20} />
-        </button>
-        <div className="flex items-center gap-3 bg-gray-100 rounded-lg px-4 py-2 w-64 hidden sm:flex">
-          <Search size={16} className="text-gray-400 flex-shrink-0" />
-          <input
-            placeholder="Search..."
-            className="bg-transparent outline-none text-sm w-full"
-          />
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
-          <Bell size={20} className="text-gray-600" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
-            {admin?.avatar || admin?.name?.[0] || 'A'}
-          </div>
-          <div className="hidden sm:block">
-            <p className="text-sm font-medium text-gray-800 leading-tight">{admin?.name || 'Admin'}</p>
-            <p className="text-xs text-gray-500">Administrator</p>
-          </div>
-        </div>
-      </div>
-    </header>
+          <MenuIcon />
+        </IconButton>
+
+        {/* Search */}
+        <Box
+          sx={{
+            display: { xs: 'none', sm: 'flex' },
+            alignItems: 'center',
+            gap: 1,
+            bgcolor: 'grey.100',
+            borderRadius: 2,
+            px: 2,
+            py: 0.75,
+            width: 260,
+          }}
+        >
+          <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+          <InputBase placeholder="Search..." sx={{ fontSize: 14, flex: 1 }} />
+        </Box>
+
+        <Box sx={{ flex: 1 }} />
+
+        {/* Notifications */}
+        <IconButton size="small" sx={{ color: 'text.secondary' }}>
+          <Badge variant="dot" color="error">
+            <NotificationsIcon fontSize="small" />
+          </Badge>
+        </IconButton>
+
+        {/* User info */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Avatar
+            sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 13, fontWeight: 700 }}
+          >
+            {(admin?.avatar || admin?.name?.[0] || 'A').toUpperCase()}
+          </Avatar>
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+              {admin?.name || 'Admin'}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Administrator
+            </Typography>
+          </Box>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }

@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/layout/Sidebar';
 import TopBar from './components/layout/TopBar';
@@ -15,21 +17,31 @@ import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
 import Settings from './pages/Settings';
 
+const DRAWER_WIDTH = 240;
+
 function ProtectedLayout({ children }) {
   const { admin, loading } = useAuth();
-  if (loading) return <div className="flex items-center justify-center h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div></div>;
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <CircularProgress color="primary" />
+      </Box>
+    );
+  }
   if (!admin || admin.role !== 'admin') return <Navigate to="/login" replace />;
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default' }}>
+      <Sidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} drawerWidth={DRAWER_WIDTH} />
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         <TopBar onMenuClick={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-auto p-6">{children}</main>
-      </div>
-    </div>
+        <Box component="main" sx={{ flex: 1, overflow: 'auto', p: 3 }}>
+          {children}
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

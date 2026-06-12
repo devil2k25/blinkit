@@ -1,47 +1,45 @@
-import React, { useEffect } from 'react'
-import { X } from 'lucide-react'
+import React from 'react'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
+
+const sizeMap = {
+  sm: 'xs',
+  md: 'sm',
+  lg: 'md',
+  xl: 'lg',
+}
 
 export default function Modal({ open, onClose, title, children, size = 'md' }) {
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => { document.body.style.overflow = '' }
-  }, [open])
-
-  if (!open) return null
-
-  const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl',
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className={`relative bg-white rounded-2xl shadow-2xl w-full ${sizeClasses[size]} max-h-[90vh] flex flex-col`}>
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            <X size={18} />
-          </button>
-        </div>
-        {/* Body */}
-        <div className="overflow-y-auto flex-1 px-6 py-4">
-          {children}
-        </div>
-      </div>
-    </div>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth={sizeMap[size] || 'sm'}
+      fullWidth
+      PaperProps={{ sx: { borderRadius: 3 } }}
+    >
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          pb: 1,
+          pr: 1.5,
+          fontWeight: 600,
+          fontSize: 18,
+        }}
+      >
+        {title}
+        <IconButton size="small" onClick={onClose} sx={{ color: 'text.secondary' }}>
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers sx={{ pt: 2 }}>
+        {children}
+      </DialogContent>
+    </Dialog>
   )
 }

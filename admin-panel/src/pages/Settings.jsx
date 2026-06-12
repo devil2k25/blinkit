@@ -1,4 +1,14 @@
 import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import toast from 'react-hot-toast';
 
 export default function Settings() {
@@ -14,52 +24,73 @@ export default function Settings() {
   const save = () => toast.success('Settings saved!');
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500 text-sm">Configure app-wide settings</p>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box>
+        <Typography variant="h5" fontWeight={700}>Settings</Typography>
+        <Typography variant="body2" color="text.secondary">Configure app-wide settings</Typography>
+      </Box>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 space-y-5">
-          <h3 className="font-semibold text-gray-800 border-b pb-3">Delivery Settings</h3>
-          {[
-            { key: 'deliveryFee', label: 'Delivery Fee (₹)', type: 'number' },
-            { key: 'minOrderAmount', label: 'Minimum Order Amount (₹)', type: 'number' },
-            { key: 'maxDeliveryRadius', label: 'Max Delivery Radius (km)', type: 'number' },
-            { key: 'estimatedDeliveryTime', label: 'Estimated Delivery Time (mins)', type: 'number' },
-          ].map(({ key, label, type }) => (
-            <div key={key}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-              <input type={type} value={settings[key]} onChange={e => setSettings({ ...settings, [key]: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" />
-            </div>
-          ))}
-        </div>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="subtitle1" fontWeight={600} mb={0.5}>Delivery Settings</Typography>
+              <Divider sx={{ mb: 2.5 }} />
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                {[
+                  { key: 'deliveryFee', label: 'Delivery Fee (₹)' },
+                  { key: 'minOrderAmount', label: 'Minimum Order Amount (₹)' },
+                  { key: 'maxDeliveryRadius', label: 'Max Delivery Radius (km)' },
+                  { key: 'estimatedDeliveryTime', label: 'Estimated Delivery Time (mins)' },
+                ].map(({ key, label }) => (
+                  <TextField
+                    key={key}
+                    label={label}
+                    type="number"
+                    value={settings[key]}
+                    onChange={e => setSettings({ ...settings, [key]: e.target.value })}
+                    size="small"
+                    fullWidth
+                  />
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 space-y-5">
-          <h3 className="font-semibold text-gray-800 border-b pb-3">App Settings</h3>
-          {[
-            { key: 'maintenanceMode', label: 'Maintenance Mode', desc: 'Disable the app for users' },
-            { key: 'allowNewRegistrations', label: 'Allow Registrations', desc: 'Allow new user signups' },
-          ].map(({ key, label, desc }) => (
-            <div key={key} className="flex items-center justify-between py-2">
-              <div>
-                <p className="text-sm font-medium text-gray-800">{label}</p>
-                <p className="text-xs text-gray-500">{desc}</p>
-              </div>
-              <button onClick={() => setSettings({ ...settings, [key]: !settings[key] })}
-                className={`w-12 h-6 rounded-full transition-colors ${settings[key] ? 'bg-green-600' : 'bg-gray-300'}`}>
-                <div className={`w-4 h-4 bg-white rounded-full shadow mx-1 transition-transform ${settings[key] ? 'translate-x-6' : ''}`}></div>
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="subtitle1" fontWeight={600} mb={0.5}>App Settings</Typography>
+              <Divider sx={{ mb: 2.5 }} />
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {[
+                  { key: 'maintenanceMode', label: 'Maintenance Mode', desc: 'Disable the app for users' },
+                  { key: 'allowNewRegistrations', label: 'Allow Registrations', desc: 'Allow new user signups' },
+                ].map(({ key, label, desc }) => (
+                  <Box key={key} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 1 }}>
+                    <Box>
+                      <Typography variant="body2" fontWeight={500}>{label}</Typography>
+                      <Typography variant="caption" color="text.secondary">{desc}</Typography>
+                    </Box>
+                    <Switch
+                      checked={settings[key]}
+                      onChange={() => setSettings({ ...settings, [key]: !settings[key] })}
+                      color="primary"
+                    />
+                  </Box>
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-      <button onClick={save} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-medium">
-        Save Settings
-      </button>
-    </div>
+      <Box>
+        <Button variant="contained" size="large" onClick={save} sx={{ px: 4 }}>
+          Save Settings
+        </Button>
+      </Box>
+    </Box>
   );
 }

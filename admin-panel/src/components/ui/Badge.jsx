@@ -1,41 +1,35 @@
 import React from 'react'
-
-const variants = {
-  success: 'bg-green-100 text-green-700',
-  danger: 'bg-red-100 text-red-700',
-  warning: 'bg-yellow-100 text-yellow-700',
-  info: 'bg-blue-100 text-blue-700',
-  gray: 'bg-gray-100 text-gray-700',
-  purple: 'bg-purple-100 text-purple-700',
-  orange: 'bg-orange-100 text-orange-700',
-}
+import Chip from '@mui/material/Chip'
 
 const statusMap = {
   active: 'success',
-  inactive: 'danger',
+  inactive: 'error',
   approved: 'success',
   pending: 'warning',
-  rejected: 'danger',
+  rejected: 'error',
   available: 'success',
-  unavailable: 'gray',
+  unavailable: 'default',
   delivered: 'success',
-  cancelled: 'danger',
+  cancelled: 'error',
   confirmed: 'info',
-  preparing: 'orange',
-  'out for delivery': 'purple',
-  admin: 'purple',
+  preparing: 'warning',
+  'out for delivery': 'info',
+  'out_for_delivery': 'info',
+  admin: 'secondary',
   user: 'info',
-  vendor: 'orange',
+  vendor: 'warning',
   driver: 'info',
 }
 
 export default function Badge({ label, variant, status }) {
-  const resolvedVariant = variant || statusMap[status?.toLowerCase()] || 'gray'
-  const classes = variants[resolvedVariant] || variants.gray
+  const resolvedColor = variant || statusMap[status?.toLowerCase()] || 'default'
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${classes}`}>
-      {label || status}
-    </span>
+    <Chip
+      label={label || status}
+      color={resolvedColor}
+      size="small"
+      sx={{ fontWeight: 600, fontSize: 11, textTransform: 'capitalize' }}
+    />
   )
 }

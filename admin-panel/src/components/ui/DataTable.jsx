@@ -1,5 +1,19 @@
 import React, { useState } from 'react'
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import Table from '@mui/material/Table'
+import TableHead from '@mui/material/TableHead'
+import TableBody from '@mui/material/TableBody'
+import TableRow from '@mui/material/TableRow'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 export default function DataTable({
   columns,
@@ -29,67 +43,81 @@ export default function DataTable({
   }
 
   return (
-    <div>
+    <Box>
       {searchable && (
-        <div className="mb-4 relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            size="small"
             placeholder="Search..."
             value={search}
             onChange={handleSearch}
-            className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full max-w-xs"
+            sx={{ width: 280 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
           />
-        </div>
+        </Box>
       )}
 
-      <div className="overflow-x-auto rounded-xl border border-gray-100">
-        <table className="min-w-full divide-y divide-gray-100">
-          <thead>
-            <tr>
+      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2 }}>
+        <Table size="small">
+          <TableHead>
+            <TableRow sx={{ bgcolor: 'grey.50' }}>
               {columns.map((col) => (
-                <th key={col.key} className="table-header" style={col.width ? { width: col.width } : {}}>
+                <TableCell
+                  key={col.key}
+                  sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: 0.5 }}
+                  style={col.width ? { width: col.width } : {}}
+                >
                   {col.label}
-                </th>
+                </TableCell>
               ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-50">
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {paged.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center py-12 text-gray-400 text-sm">
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center" sx={{ py: 6, color: 'text.disabled' }}>
                   {emptyMessage}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               paged.map((row, idx) => (
-                <tr key={row.id || idx} className="hover:bg-gray-50 transition-colors">
+                <TableRow
+                  key={row.id || idx}
+                  hover
+                  sx={{ '&:last-child td': { borderBottom: 0 } }}
+                >
                   {columns.map((col) => (
-                    <td key={col.key} className="table-cell">
+                    <TableCell key={col.key} sx={{ fontSize: 14 }}>
                       {col.render ? col.render(row[col.key], row) : row[col.key]}
-                    </td>
+                    </TableCell>
                   ))}
-                </tr>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-4 px-1">
-          <p className="text-sm text-gray-500">
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, px: 0.5 }}>
+          <Typography variant="body2" color="text.secondary">
             Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filtered.length)} of {filtered.length}
-          </p>
-          <div className="flex items-center gap-1">
-            <button
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <IconButton
+              size="small"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <ChevronLeft size={16} />
-            </button>
+              <ChevronLeftIcon fontSize="small" />
+            </IconButton>
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               let pageNum
               if (totalPages <= 5) pageNum = i + 1
@@ -97,29 +125,37 @@ export default function DataTable({
               else if (page >= totalPages - 2) pageNum = totalPages - 4 + i
               else pageNum = page - 2 + i
               return (
-                <button
+                <IconButton
                   key={pageNum}
+                  size="small"
                   onClick={() => setPage(pageNum)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium ${
-                    page === pageNum
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-gray-100 text-gray-600'
-                  }`}
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 1.5,
+                    bgcolor: page === pageNum ? 'primary.main' : 'transparent',
+                    color: page === pageNum ? 'white' : 'text.secondary',
+                    fontSize: 14,
+                    fontWeight: 500,
+                    '&:hover': {
+                      bgcolor: page === pageNum ? 'primary.dark' : 'grey.100',
+                    },
+                  }}
                 >
                   {pageNum}
-                </button>
+                </IconButton>
               )
             })}
-            <button
+            <IconButton
+              size="small"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
+              <ChevronRightIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   )
 }

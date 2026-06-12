@@ -1,5 +1,23 @@
 import { useState } from 'react';
-import { Search, CheckCircle, XCircle, Star } from 'lucide-react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import SearchIcon from '@mui/icons-material/Search';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import StarIcon from '@mui/icons-material/Star';
 import toast from 'react-hot-toast';
 
 const mockDrivers = [
@@ -19,87 +37,115 @@ export default function Drivers() {
   };
 
   const filtered = drivers.filter(d => d.name.toLowerCase().includes(search.toLowerCase()));
+  const pending = drivers.filter(d => !d.isApproved);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Drivers</h1>
-        <p className="text-gray-500 text-sm">{drivers.filter(d => d.isAvailable).length} currently available</p>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box>
+        <Typography variant="h5" fontWeight={700}>Drivers</Typography>
+        <Typography variant="body2" color="text.secondary">{drivers.filter(d => d.isAvailable).length} currently available</Typography>
+      </Box>
 
-      {drivers.filter(d => !d.isApproved).length > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-          <h3 className="font-semibold text-yellow-800 mb-3">⚠ Pending Driver Approvals</h3>
-          {drivers.filter(d => !d.isApproved).map(d => (
-            <div key={d.id} className="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm">
-              <div>
-                <p className="font-medium text-gray-800">{d.name}</p>
-                <p className="text-sm text-gray-500">{d.phone} · {d.vehicle}</p>
-              </div>
-              <div className="flex gap-2">
-                <button onClick={() => approve(d.id)} className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">
-                  <CheckCircle size={14} /> Approve
-                </button>
-                <button className="flex items-center gap-1 px-3 py-1.5 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200">
-                  <XCircle size={14} /> Reject
-                </button>
-              </div>
-            </div>
+      {pending.length > 0 && (
+        <Paper variant="outlined" sx={{ p: 2.5, borderColor: 'warning.light', bgcolor: '#fffbeb', borderRadius: 2 }}>
+          <Typography variant="subtitle2" fontWeight={700} color="warning.dark" mb={1.5}>
+            Pending Driver Approvals
+          </Typography>
+          {pending.map(d => (
+            <Paper key={d.id} variant="outlined" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.5, borderRadius: 2, mb: 1 }}>
+              <Box>
+                <Typography variant="body2" fontWeight={600}>{d.name}</Typography>
+                <Typography variant="caption" color="text.secondary">{d.phone} · {d.vehicle}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button size="small" variant="contained" color="success" startIcon={<CheckCircleIcon />} onClick={() => approve(d.id)}>
+                  Approve
+                </Button>
+                <Button size="small" variant="outlined" color="error" startIcon={<CancelIcon />}>
+                  Reject
+                </Button>
+              </Box>
+            </Paper>
           ))}
-        </div>
+        </Paper>
       )}
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2 flex-1 max-w-sm">
-            <Search size={16} className="text-gray-400" />
-            <input placeholder="Search drivers..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent outline-none text-sm w-full" />
-          </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b bg-gray-50">
-                <th className="pb-3 pt-2 px-3 font-medium">Driver</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Vehicle</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Status</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Deliveries</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Earnings</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Rating</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <TextField
+            size="small"
+            placeholder="Search drivers..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            sx={{ mb: 3, width: 280 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Table size="small">
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                {['Driver', 'Vehicle', 'Status', 'Deliveries', 'Earnings', 'Rating'].map(h => (
+                  <TableCell key={h} sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', textTransform: 'uppercase' }}>{h}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {filtered.filter(d => d.isApproved).map(d => (
-                <tr key={d.id} className="hover:bg-gray-50">
-                  <td className="py-3 px-3">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">{d.name[0]}</div>
-                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${d.isAvailable ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-800">{d.name}</p>
-                        <p className="text-xs text-gray-500">{d.phone}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-3 text-gray-600">{d.vehicle}</td>
-                  <td className="py-3 px-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${d.isAvailable ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                      {d.isAvailable ? '● Available' : '○ Offline'}
-                    </span>
-                  </td>
-                  <td className="py-3 px-3 font-medium">{d.deliveries}</td>
-                  <td className="py-3 px-3 font-medium text-green-700">{d.earnings}</td>
-                  <td className="py-3 px-3">
-                    <span className="flex items-center gap-1"><Star size={12} className="text-yellow-400 fill-yellow-400" />{d.rating}</span>
-                  </td>
-                </tr>
+                <TableRow key={d.id} hover sx={{ '&:last-child td': { borderBottom: 0 } }}>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Box sx={{ position: 'relative' }}>
+                        <Avatar sx={{ width: 34, height: 34, bgcolor: '#3b82f6', fontSize: 14, fontWeight: 700 }}>
+                          {d.name[0]}
+                        </Avatar>
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            bottom: -1,
+                            right: -1,
+                            width: 11,
+                            height: 11,
+                            borderRadius: '50%',
+                            bgcolor: d.isAvailable ? 'success.main' : 'grey.400',
+                            border: '2px solid white',
+                          }}
+                        />
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" fontWeight={500}>{d.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">{d.phone}</Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{d.vehicle}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={d.isAvailable ? 'Available' : 'Offline'}
+                      color={d.isAvailable ? 'success' : 'default'}
+                      size="small"
+                      sx={{ fontWeight: 600, fontSize: 11 }}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>{d.deliveries}</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: 'success.main' }}>{d.earnings}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <StarIcon sx={{ fontSize: 14, color: '#f59e0b' }} />
+                      <Typography variant="body2">{d.rating}</Typography>
+                    </Box>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

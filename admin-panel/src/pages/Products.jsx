@@ -1,5 +1,24 @@
 import { useState } from 'react';
-import { Search, Plus, Edit, Trash2, Package } from 'lucide-react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import toast from 'react-hot-toast';
 
 const mockProducts = [
@@ -26,81 +45,100 @@ export default function Products() {
     setProducts(products.map(p => p.id === id ? { ...p, isActive: !p.isActive } : p));
   };
 
-  const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.category.toLowerCase().includes(search.toLowerCase()));
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.category.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-          <p className="text-gray-500 text-sm">{products.length} products total</p>
-        </div>
-        <button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-          <Plus size={16} /> Add Product
-        </button>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box>
+          <Typography variant="h5" fontWeight={700}>Products</Typography>
+          <Typography variant="body2" color="text.secondary">{products.length} products total</Typography>
+        </Box>
+        <Button variant="contained" startIcon={<AddIcon />}>
+          Add Product
+        </Button>
+      </Box>
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2 flex-1 max-w-sm">
-            <Search size={16} className="text-gray-400" />
-            <input placeholder="Search products..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent outline-none text-sm w-full" />
-          </div>
-        </div>
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <TextField
+            size="small"
+            placeholder="Search products..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            sx={{ mb: 3, width: 280 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b bg-gray-50">
-                <th className="pb-3 pt-2 px-3 font-medium">Product</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Category</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Vendor</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Price</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Stock</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Status</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+          <Table size="small">
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                {['Product', 'Category', 'Vendor', 'Price', 'Stock', 'Status', 'Actions'].map(h => (
+                  <TableCell key={h} sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', textTransform: 'uppercase' }}>{h}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {filtered.map(p => (
-                <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="py-3 px-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <Package size={16} className="text-gray-400" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-800">{p.name}</p>
-                        <p className="text-xs text-gray-500">{p.unit}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-3 text-gray-600">{p.category}</td>
-                  <td className="py-3 px-3 text-gray-600">{p.vendor}</td>
-                  <td className="py-3 px-3">
-                    <span className="font-medium">₹{p.discountPrice || p.price}</span>
-                    {p.discountPrice && <span className="text-xs text-gray-400 line-through ml-1">₹{p.price}</span>}
-                  </td>
-                  <td className="py-3 px-3">
-                    <span className={p.stock < 20 ? 'text-red-600 font-medium' : 'text-gray-700'}>{p.stock}</span>
-                  </td>
-                  <td className="py-3 px-3">
-                    <button onClick={() => toggleActive(p.id)} className={`px-2 py-1 rounded-full text-xs font-medium ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                      {p.isActive ? 'Active' : 'Inactive'}
-                    </button>
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="flex gap-1">
-                      <button className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"><Edit size={15} /></button>
-                      <button onClick={() => deleteProduct(p.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded"><Trash2 size={15} /></button>
-                    </div>
-                  </td>
-                </tr>
+                <TableRow key={p.id} hover sx={{ '&:last-child td': { borderBottom: 0 } }}>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Avatar variant="rounded" sx={{ width: 36, height: 36, bgcolor: 'grey.100' }}>
+                        <InventoryIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+                      </Avatar>
+                      <Box>
+                        <Typography variant="body2" fontWeight={500}>{p.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">{p.unit}</Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{p.category}</TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{p.vendor}</TableCell>
+                  <TableCell>
+                    <Typography variant="body2" fontWeight={600}>₹{p.discountPrice || p.price}</Typography>
+                    {p.discountPrice && (
+                      <Typography variant="caption" sx={{ textDecoration: 'line-through', color: 'text.disabled' }}>₹{p.price}</Typography>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" sx={{ color: p.stock < 20 ? 'error.main' : 'text.primary', fontWeight: p.stock < 20 ? 600 : 400 }}>
+                      {p.stock}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={p.isActive ? 'Active' : 'Inactive'}
+                      color={p.isActive ? 'success' : 'default'}
+                      size="small"
+                      onClick={() => toggleActive(p.id)}
+                      sx={{ fontWeight: 600, fontSize: 11, cursor: 'pointer' }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                      <IconButton size="small" color="info">
+                        <EditIcon sx={{ fontSize: 16 }} />
+                      </IconButton>
+                      <IconButton size="small" color="error" onClick={() => deleteProduct(p.id)}>
+                        <DeleteIcon sx={{ fontSize: 16 }} />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

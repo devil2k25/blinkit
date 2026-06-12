@@ -1,24 +1,76 @@
 import React from 'react'
-import { TrendingUp, TrendingDown } from 'lucide-react'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import TrendingDownIcon from '@mui/icons-material/TrendingDown'
 
-export default function StatCard({ icon: Icon, value, label, trend, trendValue, iconBg = 'bg-green-100', iconColor = 'text-primary' }) {
-  const isPositive = trend === 'up'
+export default function StatCard({
+  icon: Icon,
+  value,
+  label,
+  trend,
+  trendValue,
+  iconBg = '#dcfce7',
+  iconColor = '#0c831f',
+}) {
+  const isPositive = trend === 'up' || (typeof trend === 'string' && trend.startsWith('+'))
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-start gap-4 hover:shadow-md transition-shadow">
-      <div className={`p-3 rounded-xl ${iconBg}`}>
-        <Icon className={`${iconColor}`} size={22} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-2xl font-bold text-gray-900 truncate">{value}</p>
-        <p className="text-sm text-gray-500 mt-0.5">{label}</p>
-        {trendValue !== undefined && (
-          <div className={`flex items-center gap-1 mt-1 text-xs font-medium ${isPositive ? 'text-green-600' : 'text-red-500'}`}>
-            {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-            <span>{trendValue}% vs last week</span>
-          </div>
-        )}
-      </div>
-    </div>
+    <Card>
+      <CardContent sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, p: 2.5, '&:last-child': { pb: 2.5 } }}>
+        <Box
+          sx={{
+            p: 1.5,
+            borderRadius: 2.5,
+            bgcolor: iconBg,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          {Icon && <Icon sx={{ fontSize: 22, color: iconColor }} />}
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography variant="h6" fontWeight={700} noWrap sx={{ lineHeight: 1.2 }}>
+            {value}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.25 }}>
+            {label}
+          </Typography>
+          {trendValue !== undefined && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                mt: 0.5,
+                color: isPositive ? 'success.main' : 'error.main',
+              }}
+            >
+              {isPositive ? (
+                <TrendingUpIcon sx={{ fontSize: 14 }} />
+              ) : (
+                <TrendingDownIcon sx={{ fontSize: 14 }} />
+              )}
+              <Typography variant="caption" fontWeight={600}>
+                {trendValue}% vs last week
+              </Typography>
+            </Box>
+          )}
+          {trend && trendValue === undefined && (
+            <Typography
+              variant="caption"
+              fontWeight={600}
+              sx={{ color: isPositive ? 'success.main' : 'error.main', display: 'block', mt: 0.5 }}
+            >
+              {trend}
+            </Typography>
+          )}
+        </Box>
+      </CardContent>
+    </Card>
   )
 }

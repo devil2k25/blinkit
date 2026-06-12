@@ -1,5 +1,18 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, MapPin, Phone, Package, Truck } from 'lucide-react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import Badge from '../components/ui/Badge';
 
 const order = {
@@ -35,79 +48,133 @@ const timeline = [
 export default function OrderDetail() {
   const navigate = useNavigate();
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg"><ArrowLeft size={20} /></button>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Order {order.id}</h1>
-          <p className="text-gray-500 text-sm">Placed {order.placedAt}</p>
-        </div>
-        <div className="ml-auto"><Badge status={order.status} /></div>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <IconButton onClick={() => navigate(-1)} size="small">
+          <ArrowBackIcon />
+        </IconButton>
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h5" fontWeight={700}>Order {order.id}</Typography>
+          <Typography variant="body2" color="text.secondary">Placed {order.placedAt}</Typography>
+        </Box>
+        <Badge status={order.status} />
+      </Box>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-4">
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2"><Package size={16} />Order Items</h3>
-            <div className="space-y-3">
-              {order.items.map((item, i) => (
-                <div key={i} className="flex justify-between items-center py-2 border-b last:border-0">
-                  <div>
-                    <p className="font-medium text-gray-800">{item.name}</p>
-                    <p className="text-xs text-gray-500">{item.unit} × {item.qty}</p>
-                  </div>
-                  <p className="font-medium">₹{item.price * item.qty}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 pt-4 border-t space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600"><span>Subtotal</span><span>₹{order.subtotal}</span></div>
-              <div className="flex justify-between text-gray-600"><span>Delivery Fee</span><span>₹{order.deliveryFee}</span></div>
-              <div className="flex justify-between font-bold text-gray-900 text-base"><span>Total</span><span>₹{order.total}</span></div>
-            </div>
-          </div>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {/* Order Items */}
+            <Card>
+              <CardContent sx={{ p: 2.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                  <InventoryIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                  <Typography variant="subtitle1" fontWeight={600}>Order Items</Typography>
+                </Box>
+                {order.items.map((item, i) => (
+                  <Box key={i}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1.5 }}>
+                      <Box>
+                        <Typography variant="body2" fontWeight={500}>{item.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">{item.unit} × {item.qty}</Typography>
+                      </Box>
+                      <Typography variant="body2" fontWeight={600}>₹{item.price * item.qty}</Typography>
+                    </Box>
+                    {i < order.items.length - 1 && <Divider />}
+                  </Box>
+                ))}
+                <Divider sx={{ mt: 1, mb: 1.5 }} />
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2" color="text.secondary">Subtotal</Typography>
+                    <Typography variant="body2">₹{order.subtotal}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2" color="text.secondary">Delivery Fee</Typography>
+                    <Typography variant="body2">₹{order.deliveryFee}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="subtitle2" fontWeight={700}>Total</Typography>
+                    <Typography variant="subtitle2" fontWeight={700}>₹{order.total}</Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
 
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h3 className="font-semibold text-gray-800 mb-4">Order Timeline</h3>
-            <div className="space-y-3">
-              {timeline.map((step, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${step.done ? 'bg-green-600' : 'bg-gray-200'}`}>
-                    {step.done && <span className="text-white text-xs">✓</span>}
-                  </div>
-                  <div className="flex-1 flex justify-between">
-                    <span className={`text-sm ${step.done ? 'text-gray-800 font-medium' : 'text-gray-400'}`}>{step.label}</span>
-                    <span className="text-xs text-gray-500">{step.done ? step.time : ''}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+            {/* Timeline */}
+            <Card>
+              <CardContent sx={{ p: 2.5 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>Order Timeline</Typography>
+                {timeline.map((step, i) => (
+                  <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: i < timeline.length - 1 ? 1.5 : 0 }}>
+                    {step.done
+                      ? <CheckCircleIcon sx={{ color: 'primary.main', fontSize: 22, flexShrink: 0 }} />
+                      : <RadioButtonUncheckedIcon sx={{ color: 'text.disabled', fontSize: 22, flexShrink: 0 }} />
+                    }
+                    <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2" fontWeight={step.done ? 500 : 400} color={step.done ? 'text.primary' : 'text.disabled'}>
+                        {step.label}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">{step.done ? step.time : ''}</Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </Box>
+        </Grid>
 
-        <div className="space-y-4">
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2"><MapPin size={16} />Delivery Address</h3>
-            <p className="text-sm text-gray-600">{order.address}</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h3 className="font-semibold text-gray-800 mb-3">Customer</h3>
-            <p className="text-sm font-medium text-gray-800">{order.customer.name}</p>
-            <p className="text-sm text-gray-500 flex items-center gap-1 mt-1"><Phone size={12} />{order.customer.phone}</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2"><Truck size={16} />Driver</h3>
-            <p className="text-sm font-medium text-gray-800">{order.driver.name}</p>
-            <p className="text-sm text-gray-500">{order.driver.vehicle}</p>
-            <p className="text-sm text-gray-500 flex items-center gap-1 mt-1"><Phone size={12} />{order.driver.phone}</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h3 className="font-semibold text-gray-800 mb-2">Payment</h3>
-            <p className="text-sm text-gray-600">{order.paymentMethod}</p>
-            <p className="text-sm text-green-600 font-medium mt-1">Paid ✓</p>
-          </div>
-        </div>
-      </div>
-    </div>
+        <Grid item xs={12} md={4}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {/* Address */}
+            <Card>
+              <CardContent sx={{ p: 2.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <LocationOnIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                  <Typography variant="subtitle2" fontWeight={600}>Delivery Address</Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">{order.address}</Typography>
+              </CardContent>
+            </Card>
+
+            {/* Customer */}
+            <Card>
+              <CardContent sx={{ p: 2.5 }}>
+                <Typography variant="subtitle2" fontWeight={600} mb={1}>Customer</Typography>
+                <Typography variant="body2" fontWeight={500}>{order.customer.name}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.75 }}>
+                  <PhoneIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                  <Typography variant="body2" color="text.secondary">{order.customer.phone}</Typography>
+                </Box>
+              </CardContent>
+            </Card>
+
+            {/* Driver */}
+            <Card>
+              <CardContent sx={{ p: 2.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <LocalShippingIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                  <Typography variant="subtitle2" fontWeight={600}>Driver</Typography>
+                </Box>
+                <Typography variant="body2" fontWeight={500}>{order.driver.name}</Typography>
+                <Typography variant="body2" color="text.secondary">{order.driver.vehicle}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.75 }}>
+                  <PhoneIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                  <Typography variant="body2" color="text.secondary">{order.driver.phone}</Typography>
+                </Box>
+              </CardContent>
+            </Card>
+
+            {/* Payment */}
+            <Card>
+              <CardContent sx={{ p: 2.5 }}>
+                <Typography variant="subtitle2" fontWeight={600} mb={1}>Payment</Typography>
+                <Typography variant="body2" color="text.secondary">{order.paymentMethod}</Typography>
+                <Typography variant="body2" color="success.main" fontWeight={600} mt={0.5}>Paid ✓</Typography>
+              </CardContent>
+            </Card>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import toast from 'react-hot-toast';
 
 const mockCategories = [
@@ -34,42 +45,87 @@ export default function Categories() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
-          <p className="text-gray-500 text-sm">{categories.length} categories</p>
-        </div>
-        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-          <Plus size={16} /> Add Category
-        </button>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box>
+          <Typography variant="h5" fontWeight={700}>Categories</Typography>
+          <Typography variant="body2" color="text.secondary">{categories.length} categories</Typography>
+        </Box>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setShowForm(true)}>
+          Add Category
+        </Button>
+      </Box>
 
       {showForm && (
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="font-semibold mb-4">Add New Category</h3>
-          <div className="flex gap-3">
-            <input placeholder="Emoji (e.g. 🛒)" value={newCat.emoji} onChange={e => setNewCat({ ...newCat, emoji: e.target.value })} className="border rounded-lg px-3 py-2 w-24 text-center text-xl" />
-            <input placeholder="Category name" value={newCat.name} onChange={e => setNewCat({ ...newCat, name: e.target.value })} className="border rounded-lg px-3 py-2 flex-1" />
-            <button onClick={addCategory} className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm">Add</button>
-            <button onClick={() => setShowForm(false)} className="border px-4 py-2 rounded-lg text-sm">Cancel</button>
-          </div>
-        </div>
+        <Card>
+          <CardContent sx={{ p: 3 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>Add New Category</Typography>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <TextField
+                size="small"
+                placeholder="Emoji"
+                value={newCat.emoji}
+                onChange={e => setNewCat({ ...newCat, emoji: e.target.value })}
+                sx={{ width: 90 }}
+                inputProps={{ style: { textAlign: 'center', fontSize: 22 } }}
+              />
+              <TextField
+                size="small"
+                placeholder="Category name"
+                value={newCat.name}
+                onChange={e => setNewCat({ ...newCat, name: e.target.value })}
+                sx={{ flex: 1 }}
+              />
+              <Button variant="contained" onClick={addCategory}>Add</Button>
+              <Button variant="outlined" onClick={() => setShowForm(false)}>Cancel</Button>
+            </Box>
+          </CardContent>
+        </Card>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <Grid container spacing={2}>
         {categories.map(c => (
-          <div key={c.id} className={`bg-white rounded-xl shadow-sm p-4 text-center relative group ${!c.isActive ? 'opacity-60' : ''}`}>
-            <div className="text-4xl mb-2">{c.emoji}</div>
-            <p className="font-medium text-gray-800 text-sm">{c.name}</p>
-            <p className="text-xs text-gray-500 mt-1">{c.products} products</p>
-            <div className="absolute top-2 right-2 hidden group-hover:flex gap-1">
-              <button className="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"><Edit size={12} /></button>
-              <button onClick={() => deleteCategory(c.id)} className="p-1 bg-red-100 text-red-600 rounded hover:bg-red-200"><Trash2 size={12} /></button>
-            </div>
-          </div>
+          <Grid item xs={6} sm={4} lg={2.4} key={c.id}>
+            <Paper
+              variant="outlined"
+              sx={{
+                p: 2,
+                textAlign: 'center',
+                borderRadius: 2,
+                opacity: c.isActive ? 1 : 0.5,
+                position: 'relative',
+                '&:hover .cat-actions': { display: 'flex' },
+                cursor: 'default',
+              }}
+            >
+              <Typography sx={{ fontSize: 36, lineHeight: 1, mb: 1 }}>{c.emoji}</Typography>
+              <Typography variant="body2" fontWeight={600}>{c.name}</Typography>
+              <Typography variant="caption" color="text.secondary">{c.products} products</Typography>
+              <Box
+                className="cat-actions"
+                sx={{
+                  display: 'none',
+                  position: 'absolute',
+                  top: 6,
+                  right: 6,
+                  gap: 0.5,
+                  bgcolor: 'background.paper',
+                  borderRadius: 1,
+                  p: 0.25,
+                  boxShadow: 1,
+                }}
+              >
+                <IconButton size="small" color="info" sx={{ p: 0.25 }}>
+                  <EditIcon sx={{ fontSize: 14 }} />
+                </IconButton>
+                <IconButton size="small" color="error" sx={{ p: 0.25 }} onClick={() => deleteCategory(c.id)}>
+                  <DeleteIcon sx={{ fontSize: 14 }} />
+                </IconButton>
+              </Box>
+            </Paper>
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   );
 }

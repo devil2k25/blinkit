@@ -1,6 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Eye } from 'lucide-react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import SearchIcon from '@mui/icons-material/Search';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Badge from '../components/ui/Badge';
 
 const statuses = ['all', 'pending', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled'];
@@ -28,65 +42,77 @@ export default function Orders() {
   });
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
-        <p className="text-gray-500 text-sm">{mockOrders.length} orders today</p>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box>
+        <Typography variant="h5" fontWeight={700}>Orders</Typography>
+        <Typography variant="body2" color="text.secondary">{mockOrders.length} orders today</Typography>
+      </Box>
 
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      {/* Status tabs */}
+      <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 0.5 }}>
         {statuses.map(s => (
-          <button key={s} onClick={() => setActiveTab(s)}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${activeTab === s ? 'bg-green-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}>
-            {s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-            <span className="ml-1 text-xs opacity-70">({mockOrders.filter(o => s === 'all' || o.status === s).length})</span>
-          </button>
+          <Button
+            key={s}
+            variant={activeTab === s ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => setActiveTab(s)}
+            sx={{ whiteSpace: 'nowrap', borderRadius: 5, textTransform: 'capitalize', flexShrink: 0 }}
+          >
+            {s.replace(/_/g, ' ')}
+            <Box component="span" sx={{ ml: 0.75, opacity: 0.7, fontSize: 11 }}>
+              ({mockOrders.filter(o => s === 'all' || o.status === s).length})
+            </Box>
+          </Button>
         ))}
-      </div>
+      </Box>
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2 flex-1 max-w-sm">
-            <Search size={16} className="text-gray-400" />
-            <input placeholder="Search orders..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent outline-none text-sm w-full" />
-          </div>
-        </div>
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <TextField
+            size="small"
+            placeholder="Search orders..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            sx={{ mb: 3, width: 280 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b bg-gray-50">
-                <th className="pb-3 pt-2 px-3 font-medium">Order ID</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Customer</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Vendor</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Items</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Amount</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Status</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Driver</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Date</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+          <Table size="small">
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                {['Order ID', 'Customer', 'Vendor', 'Items', 'Amount', 'Status', 'Driver', 'Date', 'Actions'].map(h => (
+                  <TableCell key={h} sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', textTransform: 'uppercase' }}>{h}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {filtered.map(o => (
-                <tr key={o.id} className="hover:bg-gray-50">
-                  <td className="py-3 px-3 font-mono text-xs text-gray-700">{o.id}</td>
-                  <td className="py-3 px-3 text-gray-800">{o.customer}</td>
-                  <td className="py-3 px-3 text-gray-600">{o.vendor}</td>
-                  <td className="py-3 px-3 text-gray-700">{o.items} items</td>
-                  <td className="py-3 px-3 font-medium">₹{o.amount}</td>
-                  <td className="py-3 px-3"><Badge status={o.status} /></td>
-                  <td className="py-3 px-3 text-gray-600">{o.driver}</td>
-                  <td className="py-3 px-3 text-gray-500 text-xs">{o.date}</td>
-                  <td className="py-3 px-3">
-                    <button onClick={() => navigate(`/orders/${o.id}`)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"><Eye size={15} /></button>
-                  </td>
-                </tr>
+                <TableRow key={o.id} hover sx={{ '&:last-child td': { borderBottom: 0 } }}>
+                  <TableCell sx={{ fontFamily: 'monospace', fontSize: 12 }}>{o.id}</TableCell>
+                  <TableCell>{o.customer}</TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{o.vendor}</TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{o.items} items</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>₹{o.amount}</TableCell>
+                  <TableCell><Badge status={o.status} /></TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{o.driver}</TableCell>
+                  <TableCell sx={{ color: 'text.secondary', fontSize: 12 }}>{o.date}</TableCell>
+                  <TableCell>
+                    <IconButton size="small" color="info" onClick={() => navigate(`/orders/${o.id}`)}>
+                      <VisibilityIcon sx={{ fontSize: 16 }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

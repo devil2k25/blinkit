@@ -1,6 +1,21 @@
 import { useState } from 'react';
-import { Search, Filter, ToggleLeft, ToggleRight, Eye } from 'lucide-react';
-import Badge from '../components/ui/Badge';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import SearchIcon from '@mui/icons-material/Search';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import toast from 'react-hot-toast';
 
 const mockUsers = [
@@ -18,7 +33,10 @@ export default function Users() {
   const [users, setUsers] = useState(mockUsers);
   const [search, setSearch] = useState('');
 
-  const filtered = users.filter(u => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()));
+  const filtered = users.filter(u =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.email.toLowerCase().includes(search.toLowerCase())
+  );
 
   const toggleStatus = (id) => {
     setUsers(users.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u));
@@ -26,65 +44,77 @@ export default function Users() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Users</h1>
-          <p className="text-gray-500 text-sm">{users.length} registered users</p>
-        </div>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box>
+        <Typography variant="h5" fontWeight={700}>Users</Typography>
+        <Typography variant="body2" color="text.secondary">{users.length} registered users</Typography>
+      </Box>
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2 flex-1 max-w-sm">
-            <Search size={16} className="text-gray-400" />
-            <input placeholder="Search users..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent outline-none text-sm w-full" />
-          </div>
-        </div>
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <TextField
+            size="small"
+            placeholder="Search users..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            sx={{ mb: 3, width: 280 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b bg-gray-50">
-                <th className="pb-3 pt-2 px-3 font-medium">User</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Phone</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Orders</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Joined</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Status</th>
-                <th className="pb-3 pt-2 px-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+          <Table size="small">
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                {['User', 'Phone', 'Orders', 'Joined', 'Status', 'Actions'].map(h => (
+                  <TableCell key={h} sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', textTransform: 'uppercase' }}>{h}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {filtered.map(u => (
-                <tr key={u.id} className="hover:bg-gray-50">
-                  <td className="py-3 px-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-sm">{u.name[0]}</div>
-                      <div>
-                        <p className="font-medium text-gray-800">{u.name}</p>
-                        <p className="text-xs text-gray-500">{u.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-3 text-gray-600">{u.phone}</td>
-                  <td className="py-3 px-3 font-medium text-gray-800">{u.orders}</td>
-                  <td className="py-3 px-3 text-gray-500">{u.joined}</td>
-                  <td className="py-3 px-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${u.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                      {u.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="py-3 px-3">
-                    <button onClick={() => toggleStatus(u.id)} className={`p-1 rounded ${u.isActive ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}>
-                      {u.isActive ? <ToggleRight size={22} /> : <ToggleLeft size={22} />}
-                    </button>
-                  </td>
-                </tr>
+                <TableRow key={u.id} hover sx={{ '&:last-child td': { borderBottom: 0 } }}>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Avatar sx={{ width: 34, height: 34, bgcolor: 'primary.main', fontSize: 14, fontWeight: 700 }}>
+                        {u.name[0]}
+                      </Avatar>
+                      <Box>
+                        <Typography variant="body2" fontWeight={500}>{u.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">{u.email}</Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{u.phone}</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>{u.orders}</TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>{u.joined}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={u.isActive ? 'Active' : 'Inactive'}
+                      color={u.isActive ? 'success' : 'error'}
+                      size="small"
+                      sx={{ fontWeight: 600, fontSize: 11 }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      size="small"
+                      onClick={() => toggleStatus(u.id)}
+                      color={u.isActive ? 'success' : 'default'}
+                    >
+                      {u.isActive ? <ToggleOnIcon sx={{ fontSize: 26 }} /> : <ToggleOffIcon sx={{ fontSize: 26 }} />}
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
